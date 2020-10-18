@@ -2,7 +2,7 @@ package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Environment
-import com.absolutegalaber.buildz.domain.InvalidRequestException
+import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.repository.ArtifactRepository
 import com.absolutegalaber.buildz.repository.EnvironmentRepository
 import org.springframework.stereotype.Service

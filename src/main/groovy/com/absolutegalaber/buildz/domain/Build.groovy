@@ -32,6 +32,6 @@ class Build {
     @Column(name = 'build_number')
     Long buildNumber
 
-    @OneToMany(mappedBy = "build", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "build", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     Set<BuildLabel> labels = []
 }

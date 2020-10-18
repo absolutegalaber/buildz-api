@@ -1,5 +1,6 @@
 package com.absolutegalaber.buildz.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
@@ -16,6 +17,7 @@ class BuildLabel {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = 'build_id', nullable = false)
+    @JsonBackReference
     Build build
 
     @Basic(optional = false)

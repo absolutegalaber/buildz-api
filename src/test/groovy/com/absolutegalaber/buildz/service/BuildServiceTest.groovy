@@ -1,6 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.domain.*
+import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Subject
 import spock.lang.Unroll

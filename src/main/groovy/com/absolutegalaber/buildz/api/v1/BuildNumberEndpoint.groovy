@@ -13,10 +13,10 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Transactional
-class BuildNumberResourceV1 {
+class BuildNumberEndpoint {
     private final BuildCountService buildCountService
 
-    BuildNumberResourceV1(BuildCountService buildCountService) {
+    BuildNumberEndpoint(BuildCountService buildCountService) {
         this.buildCountService = buildCountService
     }
 

@@ -2,7 +2,6 @@ package com.absolutegalaber.buildz.domain
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.util.StringUtils
 
 class BuildSearch {
     String project
@@ -16,11 +15,11 @@ class BuildSearch {
     String sortDirection
 
     PageRequest page() {
-        int thePage = getPage() != null ? getPage() : 0;
-        int thePageSize = getPageSize() != null ? getPageSize() : 10;
-        Sort.Direction theDirection = !StringUtils.hasText(getSortDirection()) ? Sort.Direction.DESC : Sort.Direction.fromString(getSortDirection());
-        String theSortAttribute = !StringUtils.hasText(getSortAttribute()) ? "buildNumber" : getSortAttribute();
-        PageRequest.of(thePage, thePageSize, Sort.by(theDirection, theSortAttribute));
+        int thePage = page ?: 0
+        int thePageSize = pageSize ?: 10
+        Sort.Direction theDirection = sortDirection ? Sort.Direction.fromString(sortDirection) : Sort.Direction.DESC
+        String theSortAttribute = sortAttribute ?: "buildNumber"
+        PageRequest.of(thePage, thePageSize, Sort.by(theDirection, theSortAttribute))
     }
 
     static BuildSearch fromArtifact(Artifact artifact) {

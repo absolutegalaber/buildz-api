@@ -1,4 +1,4 @@
-package com.absolutegalaber.buildz.domain
+package com.absolutegalaber.buildz.domain.exception
 
 class InvalidRequestException extends Exception {
     InvalidRequestException(String message) {

@@ -1,6 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.domain.*
+import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.repository.BuildLabelRepository
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.EnvironmentRepository
@@ -41,6 +42,7 @@ class BuildService {
 
     Build addLabels(Long buildId, List<BuildLabel> labels) throws InvalidRequestException {
         Build build = byId(buildId).orElseThrow({ ->
+            //TODO: Umbau: Exception im Endpoint werfenn
             new InvalidRequestException("No Build found for buildId=" + buildId)
         })
         labels.forEach({ buildLabel ->
@@ -68,7 +70,7 @@ class BuildService {
     private Specification<Build> toSpecification(BuildSearch search) {
         Specification<Build> theQuerySpecification = allBuilds()
         if (!search.getLabels().isEmpty()) {
-            Set<BuildLabel> labelsToSearch = labelsToInclude(search.getLabels());
+            Set<BuildLabel> labelsToSearch = labelsToInclude(search.getLabels())
             if (labelsToSearch.isEmpty()) {
                 return noBuilds()
             } else {
@@ -123,9 +125,10 @@ class BuildService {
     EnvironmentBuilds ofEnvironment(String environmentName) throws InvalidRequestException {
         Optional<Environment> environment = environmentRepository.findOne(environmentWithName(environmentName))
         if (environment.isEmpty()) {
+            //TODO: Umbau: Exception im Endpoint werfenn
             throw new InvalidRequestException("No Environment found with name=" + environmentName)
         }
-        EnvironmentBuilds builds = new EnvironmentBuilds();
+        EnvironmentBuilds builds = new EnvironmentBuilds()
         environment.get().getArtifacts().each { Artifact theArtifact ->
             latestArtifact(theArtifact)
                     .ifPresent(builds.&add)

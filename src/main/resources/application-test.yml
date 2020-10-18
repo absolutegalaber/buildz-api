@@ -9,3 +9,10 @@ spring:
     hibernate.ddl-auto: validate
   flyway:
     enabled: true
+  jersey:
+    init:
+      jersey:
+        config:
+          server:
+            response:
+              setStatusOverSendError: true

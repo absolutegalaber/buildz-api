@@ -3,7 +3,7 @@ package com.absolutegalaber.buildz.service
 import com.absolutegalaber.buildz.BaseBuildzSpec
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Environment
-import com.absolutegalaber.buildz.domain.InvalidRequestException
+import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Subject
 import spock.lang.Unroll
