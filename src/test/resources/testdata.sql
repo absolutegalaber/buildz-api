@@ -1,3 +1,11 @@
+delete from artifact_labels;
+delete from artifact;
+delete from environment;
+delete from build_count;
+delete from build_label;
+delete from build;
+
+
 -- a build count
 INSERT INTO build_count (id, branch, counter, project) VALUES (1, 'master', 1, 'buildz-backend');
 

@@ -2,6 +2,7 @@ package com.absolutegalaber.buildz
 
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 
@@ -11,5 +12,6 @@ import spock.lang.Specification
 @SpringBootTest
 @ContextConfiguration
 @Transactional
+@Sql('/testdata.sql')
 abstract class BaseBuildzSpec extends Specification {
 }
