@@ -1,13 +1,13 @@
 language: java
 jdk:
-    - openjdk11
+  - openjdk11
 services:
-    - mysql
+  - mysql
 build:
   ci:
-    - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
-    - mysql -e "GRANT ALL ON *.* TO shippable@localhost IDENTIFIED BY ''; FLUSH PRIVILEGES;"
+#    - mkdir -p shippable/testresults
+#    - mkdir -p shippable/codecoverage
+    - mysql -e "CREATE USER shippable@localhost IDENTIFIED BY ''; GRANT ALL ON *.* TO shippable@localhost; FLUSH PRIVILEGES;"
     - mysql -e 'create database buildz;'
     - mvn clean install -Dspring.profiles.active=shippable
 #    - cp target/surefire-reports/*xml shippable/testresults/
