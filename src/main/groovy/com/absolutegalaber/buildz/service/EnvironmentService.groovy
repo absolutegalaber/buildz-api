@@ -38,6 +38,8 @@ class EnvironmentService {
     }
 
     Environment save(Environment environment) throws InvalidRequestException {
+        //TODO: Make this sexier
+        Set<Artifact> theArtifacts = environment.getArtifacts()
         if (environment.getId() != null) {
             //an update ==> we don't mess around here and clean the depending side environment.artifact
             //obviously this could be handled better...
@@ -51,8 +53,14 @@ class EnvironmentService {
             if (byName(environment.getName()).isPresent()) {
                 throw new InvalidRequestException("Environment with name=" + environment.getName() + "already present")
             }
+            environment = create(environment.getName())
         }
-        return environmentRepository.save(environment)
+        theArtifacts.each { Artifact artifact ->
+            artifact.setEnvironment(environment)
+            environment.artifacts.add(artifact)
+            artifactRepository.save(artifact)
+        }
+        return environment
     }
 
     void delete(String name) {

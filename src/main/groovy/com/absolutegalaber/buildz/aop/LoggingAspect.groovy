@@ -21,14 +21,10 @@ class LoggingAspect {
 
     @Around("loggingPointcut()")
     Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (log.isInfoEnabled()) {
-            log.info("{}.{}( {} )", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()))
-        }
+        log.info("{}.{}( {} )", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()))
         try {
             Object result = joinPoint.proceed();
-            if (log.isInfoEnabled()) {
-                log.info("{}.{}(): {}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), result)
-            }
+            log.info("{}.{}(): {}", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), result)
             return result
         } catch (IllegalArgumentException e) {
             log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()), joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName())

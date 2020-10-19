@@ -1,10 +1,15 @@
 package com.absolutegalaber.buildz.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
 import javax.persistence.*
 
 @Entity
 @Table(name = 'artifact')
+@ToString(includes = ['id', 'project', 'branch', 'labels'])
+@EqualsAndHashCode(includes = ['id', 'project', 'branch', 'labels'])
 class Artifact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +17,7 @@ class Artifact {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = 'environment_id', nullable = false)
+    @JsonBackReference
     Environment environment
 
     @Basic(optional = false)
@@ -22,7 +28,7 @@ class Artifact {
     @Column(name = 'branch')
     String branch
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = 'artifact_labels', joinColumns = @JoinColumn(name = 'artifact_id'))
     Map<String, String> labels = [:]
 }

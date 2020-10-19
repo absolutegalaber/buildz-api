@@ -4,13 +4,14 @@ import com.absolutegalaber.buildz.config.JerseyConfig
 import com.absolutegalaber.buildz.config.LoggingConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+import org.springframework.context.annotation.Import
 
-@SpringBootApplication(exclude = [ErrorMvcAutoConfiguration])
+@SpringBootApplication()
+@Import([JerseyConfig, LoggingConfig])
 class BuildzApiApplication {
 
     static void main(String[] args) {
-        SpringApplication.run([BuildzApiApplication, JerseyConfig, LoggingConfig] as Class[], args)
+        SpringApplication.run(BuildzApiApplication, args)
     }
 
 }
