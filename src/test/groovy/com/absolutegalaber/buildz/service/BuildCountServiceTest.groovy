@@ -28,10 +28,10 @@ class BuildCountServiceTest extends BaseBuildzSpec {
         buildCount.branch == branch
 
         where:
-        project             | branch    | expected | message
-        'buildz-backend'    | 'master'  | 2L       | "Next(): Increments existing build count"
-        'buildz-backend'    | 'release' | 1L       | "Next(): Creates non-existing build count for new branch"
-        'buildz-sub-module' | 'master'  | 1L       | "Next(): Creates non-existing build count for new project"
+        project             | branch                | expected | message
+        'backend'           | 'main'                | 11L      | "Next(): Increments existing build count"
+        'backend'           | 'feature/new-feature' | 1L       | "Next(): Creates non-existing build count for new branch"
+        'buildz-sub-module' | 'master'              | 1L       | "Next(): Creates non-existing build count for new project"
 
     }
 
@@ -50,9 +50,9 @@ class BuildCountServiceTest extends BaseBuildzSpec {
         buildCount.branch == branch
 
         where:
-        project          | branch    | expected | message
-        'buildz-backend' | 'master'  | 1L       | "Current(): returns current existing build count"
-        'buildz-backend' | 'release' | 0L       | "Current(): return non-existing build count with count = 0"
+        project   | branch    | expected | message
+        'backend' | 'main'    | 10L      | "Current(): returns current existing build count"
+        'backend' | 'release' | 0L       | "Current(): return non-existing build count with count = 0"
     }
 
     @Unroll("#message")
@@ -65,7 +65,7 @@ class BuildCountServiceTest extends BaseBuildzSpec {
 
         where:
         project             | branch    | message
-        'buildz-backend'    | 'master'  | "Set(): sets build number for existing build count"
+        'buildz'            | 'master'  | "Set(): sets build number for existing build count"
         'buildz-sub-module' | 'release' | "Set(): creates build number for existing build count"
     }
 }

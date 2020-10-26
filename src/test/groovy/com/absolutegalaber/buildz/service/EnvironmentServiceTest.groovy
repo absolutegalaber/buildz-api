@@ -25,9 +25,9 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         env.isPresent() == expected
 
         where:
-        name                  | expected | message
-        'master-test-stage-1' | true     | 'ByName(): finds existing Environment by name'
-        'missing'             | false    | 'ByName(): is empty for non-existing environment name'
+        name      | expected | message
+        'main'  | true     | 'ByName(): finds existing Environment by name'
+        'missing' | false    | 'ByName(): is empty for non-existing environment name'
 
 
     }
@@ -39,7 +39,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
     def "Create with duplicate name"() {
         when:
-        service.create("master-test-stage-1")
+        service.create("main")
 
         then:
         thrown(InvalidRequestException)
@@ -72,7 +72,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
     def "Save updating existing instance"() {
         given:
-        Environment environment = service.byName('master-test-stage-1').get()
+        Environment environment = service.byName('main').get()
         Artifact artifact = new Artifact(
                 project: 'some-project', branch: 'some-branch'
         )
@@ -90,7 +90,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
     def "Save throwing Exception on duplicate Name"() {
         Environment environment = new Environment()
-        environment.setName("master-test-stage-1")
+        environment.setName("main")
 
         when:
         service.save(environment)

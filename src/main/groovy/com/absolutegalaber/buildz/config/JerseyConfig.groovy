@@ -3,6 +3,7 @@ package com.absolutegalaber.buildz.config
 import com.absolutegalaber.buildz.api.fault.DataNotFoundExceptionMapper
 import com.absolutegalaber.buildz.api.fault.InvalidRequestExceptionMapper
 import com.absolutegalaber.buildz.api.v1.BuildEndpoint
+
 import com.absolutegalaber.buildz.api.v1.BuildNumberEndpoint
 import com.absolutegalaber.buildz.api.v1.EnvironmentEndpoint
 import org.glassfish.jersey.server.ResourceConfig

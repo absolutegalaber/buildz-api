@@ -21,7 +21,27 @@ class BuildEndpointTest extends BaseRestSpec {
         given:
         String SEARCH_URL = "http://localhost:${port}/api/v1/builds/search"
         BuildSearch search = new BuildSearch(
-                project: 'buildz-backend'
+                project: 'backend'
+        )
+
+        when:
+        ResponseEntity<BuildSearchResult> responseEntity = restTemplate.postForEntity(SEARCH_URL, search, BuildSearchResult)
+
+        then:
+        responseEntity.statusCode == HttpStatus.OK
+
+        and:
+        !responseEntity.getBody().builds.isEmpty()
+    }
+
+    def "Search with Labels"() {
+        given:
+        String SEARCH_URL = "http://localhost:${port}/api/v1/builds/search"
+        BuildSearch search = new BuildSearch(
+                project: 'backend',
+                labels: [
+                        'integration-test': 'broken'
+                ]
         )
 
         when:
@@ -65,7 +85,7 @@ class BuildEndpointTest extends BaseRestSpec {
         given:
         String CREATE_URL = "http://localhost:${port}/api/v1/builds/create"
         Build build = new Build(
-                project: 'buildz-backend',
+                project: 'backend',
                 branch: 'hotfix',
                 buildNumber: 1
         )

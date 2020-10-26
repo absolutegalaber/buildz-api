@@ -102,24 +102,6 @@ class QuerySpecs {
         }
     }
 
-    static Specification<BuildLabel> buildLabelDisjunction() {
-        new Specification<BuildLabel>() {
-            @Override
-            Predicate toPredicate(Root<BuildLabel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaBuilder.disjunction()
-            }
-        }
-    }
-
-    static Specification<BuildLabel> buildLabelConjunction() {
-        new Specification<BuildLabel>() {
-            @Override
-            Predicate toPredicate(Root<BuildLabel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaBuilder.conjunction()
-            }
-        }
-    }
-
     static Specification<Build> hasLabel(BuildLabel label) {
         new Specification<Build>() {
             @Override
@@ -137,5 +119,4 @@ class QuerySpecs {
             }
         }
     }
-
 }

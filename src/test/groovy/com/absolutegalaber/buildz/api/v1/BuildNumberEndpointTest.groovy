@@ -9,8 +9,8 @@ class BuildNumberEndpointTest extends BaseRestSpec {
 
     def "Current() for existing project"() {
         given:
-        String project = 'buildz-backend'
-        String branch = 'master'
+        String project = 'backend'
+        String branch = 'main'
         String GET_CURRENT_URL = "http://localhost:${port}/api/v1/build-numbers/current/${project}/${branch}"
 
         when:
@@ -21,12 +21,12 @@ class BuildNumberEndpointTest extends BaseRestSpec {
         current.statusCode == HttpStatus.OK
 
         and:
-        buildCount.counter == 1
+        buildCount.counter == 10
     }
 
     def "Current() on new project"() {
         given:
-        String project = 'buildz-backend'
+        String project = 'backend'
         String branch = 'master'
         String GET_CURRENT_URL = "http://localhost:${port}/api/v1/build-numbers/current/${project}/${branch}"
 
@@ -45,8 +45,8 @@ class BuildNumberEndpointTest extends BaseRestSpec {
 
     def "Next() and Set()"() {
         given:
-        String project = 'buildz-backend'
-        String branch = 'master'
+        String project = 'backend'
+        String branch = 'feature/awesome-feature'
         BuildCount nextBuildCount = new BuildCount(
                 project: project,
                 branch: branch
@@ -54,7 +54,7 @@ class BuildNumberEndpointTest extends BaseRestSpec {
         BuildCount setBuildCount = new BuildCount(
                 project: project,
                 branch: branch,
-                counter: 10
+                counter: 20
         )
 
         String NEXTZ_URL = "http://localhost:${port}/api/v1/build-numbers/next"
@@ -70,7 +70,7 @@ class BuildNumberEndpointTest extends BaseRestSpec {
         setResponse.statusCode == HttpStatus.OK
 
         and:
-        nextResponse.getBody().counter == 2
-        setResponse.getBody().counter == 10
+        nextResponse.getBody().counter == 11
+        setResponse.getBody().counter == 20
     }
 }

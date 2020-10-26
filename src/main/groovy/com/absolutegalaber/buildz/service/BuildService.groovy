@@ -128,11 +128,16 @@ class BuildService {
             //TODO: Umbau: Exception im Endpoint werfenn
             throw new InvalidRequestException("No Environment found with name=" + environmentName)
         }
-        EnvironmentBuilds builds = new EnvironmentBuilds()
-        environment.get().getArtifacts().each { Artifact theArtifact ->
+        Environment theEnv = environment.get()
+        EnvironmentBuilds toReturn = new EnvironmentBuilds(
+                environment: theEnv.name
+        )
+        theEnv.getArtifacts().each { Artifact theArtifact ->
             latestArtifact(theArtifact)
-                    .ifPresent(builds.&add)
+                    .ifPresent({ Build build ->
+                        toReturn.add(build)
+                    })
         }
-        return builds;
+        return toReturn;
     }
 }

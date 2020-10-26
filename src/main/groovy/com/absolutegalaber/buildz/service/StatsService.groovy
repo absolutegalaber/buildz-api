@@ -23,7 +23,9 @@ class StatsService {
     BuildStats stats() {
         new BuildStats(
                 projects: buildRepository.distinctProjects() as Set<String>,
+                branches: buildRepository.distinctBranches() as Set<String>,
                 environments: environmentRepository.distinctEnvironments() as Set<String>,
+                labelKeys: buildLabelRepository.distinctLabelKeys(),
                 numberOfBuilds: buildRepository.count(),
                 numberOfLabels: buildLabelRepository.count()
         )

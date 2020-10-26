@@ -31,7 +31,7 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
 
     def "Create"() {
         expect:
-        service.create('buildz-backend', 'next', 1).id
+        service.create('backend', 'next', 1).id
     }
 
     def "AddLabels"() {
@@ -44,7 +44,7 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
         Build theBuild = service.addLabels(1L, [label])
 
         then:
-        theBuild.labels.size() == 3
+        theBuild.labels.size() == 4
 
     }
 
@@ -68,7 +68,9 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
                 project: theProject,
                 branch: theBranch,
                 minBuildNumber: theMinBuildNumber,
-                maxBuildNumber: theMaxBuildNumber
+                maxBuildNumber: theMaxBuildNumber,
+                pageSize: 100,
+                page: 0
         )
         if (theLabelKey && theLabelValue) {
             buildSearch.labels[theLabelKey] = theLabelValue
@@ -95,13 +97,13 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
 
 
         where:
-        theProject       | theBranch | theLabelKey        | theLabelValue                | expected | theMinBuildNumber | theMaxBuildNumber | message
-        null             | null      | null               | null                         | 10       | null              | null              | "Search(): finds all builds for empty search"
-        null             | null      | null               | null                         | 3        | 1                 | 3                 | "Search(): finds all builds with build number = 2"
-        'buildz-backend' | null      | null               | null                         | 4        | null              | null              | "Search(): finds all builds of project 'buildz-backend'"
-        'buildz-backend' | 'master'  | null               | null                         | 2        | null              | null              | "Search(): finds all builds of project 'buildz-backend' of branch 'master"
-        null             | null      | 'technical_branch' | 'feature/some-other-feature' | 2        | null              | null              | "Search(): finds all builds of projects with label technical_branch=feature/some-other-feature"
-        null             | null      | 'technical_branch' | 'noSuchBranch'               | 0        | null              | null              | "Search(): is empty for empty lbel sub-search"
+        theProject | theBranch | theLabelKey        | theLabelValue  | expected | theMinBuildNumber | theMaxBuildNumber | message
+        null       | null      | null               | null           | 90       | null              | null              | "Search(): finds all builds for empty search"
+        null       | null      | null               | null           | 9        | 1                 | 3                 | "Search(): finds all builds with build number = 2"
+        'backend'  | null      | null               | null           | 30       | null              | null              | "Search(): finds all builds of project 'backend'"
+        'backend'  | 'main'    | null               | null           | 10       | null              | null              | "Search(): finds all builds of project 'backend' of branch 'master"
+        'backend'  | 'main'    | 'integration-test' | 'ok'           | 5        | null              | null              | "Search(): finds all builds of projects with label technical_branch=feature/some-other-feature"
+        null       | null      | 'technical_branch' | 'noSuchBranch' | 0        | null              | null              | "Search(): is empty for empty lbel sub-search"
     }
 
     @Unroll("#message")
@@ -125,11 +127,11 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
         }
 
         where:
-        theProject       | theBranch        | theLabelKey        | theLabelValue                | expectedBuildNumber | message
-        'buildz-backend' | 'master'         | null               | null                         | 2L                  | "LatestArtifact(): finds latest build of branch master"
-        'buildz-backend' | null             | 'technical_branch' | 'feature/some-other-feature' | 4L                  | "LatestArtifact(): finds latest build for a spcific label"
-        'buildz-backend' | null             | 'doesnot'          | 'exist'                      | null                | "LatestArtifact(): is empty for missing labels"
-        'buildz-backend' | 'deleted-branch' | null               | null                         | null                | "LatestArtifact(): is empty for missing project/branch combo"
+        theProject | theBranch        | theLabelKey        | theLabelValue | expectedBuildNumber | message
+        'backend'  | 'main'           | null               | null          | 10L                 | "LatestArtifact(): finds latest build of branch master"
+        'backend'  | 'main'           | 'integration-test' | 'ok'          | 9L                  | "LatestArtifact(): finds latest build for a specific label"
+        'backend'  | null             | 'doesnot'          | 'exist'       | null                | "LatestArtifact(): is empty for missing labels"
+        'backend'  | 'deleted-branch' | null               | null          | null                | "LatestArtifact(): is empty for missing project/branch combo"
     }
 
     @Unroll("#message")
@@ -142,8 +144,8 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
 
         where:
         envName                | expectedSize | message
-        'feature-test-stage-1' | 2            | "OfEnvironment(): returns 2 builds for well - defined Environment (#envName)"
-        'master-test-stage-1'  | 0            | "OfEnvironment(): returns 0 builds for un-defined Environment (#envName)"
+        'main'                 | 2            | "OfEnvironment(): returns 2 builds for well - defined Environment (#envName)"
+        'feature-test-stage-1' | 0            | "OfEnvironment(): returns 0 builds for un-defined Environment (#envName)"
     }
 
     def "OfEnvironment with wrong env name"() {

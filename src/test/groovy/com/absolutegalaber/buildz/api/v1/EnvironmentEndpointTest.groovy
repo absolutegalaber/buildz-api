@@ -16,8 +16,8 @@ class EnvironmentEndpointTest extends BaseRestSpec {
                 name: newEnvName,
                 artifacts: [
                         new Artifact(
-                                project: 'buildz-backend',
-                                branch: 'master'
+                                project: 'backend',
+                                branch: 'main'
                         )
                 ]
         )
@@ -33,7 +33,7 @@ class EnvironmentEndpointTest extends BaseRestSpec {
 
     def "Get"() {
         given:
-        String envName = 'feature-test-stage-1'
+        String envName = 'main'
         String GET_URL = "http://localhost:${port}/api/v1/environments/${envName}"
 
         when:
