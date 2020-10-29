@@ -3,5 +3,11 @@ jdk:
   - openjdk11
 addons:
   mariadb: '10.4'
+
+before_script:
+  - mysql -e 'create user travis@localhost;'
+  - mysql -e 'grant all on *.* to travis@localhost;'
+  - mysql -e 'create database buildz;'
+
 script:
   ./mvnw clean clover:setup test clover:aggregate clover:clover -Dspring.profiles.active=travis
