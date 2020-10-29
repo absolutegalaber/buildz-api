@@ -1,3 +1,5 @@
+env:
+  CODECOV_TOKEN="7fc64ad8-b033-4801-bec6-224d6e981af0"
 language: java
 jdk:
   - openjdk11
@@ -11,3 +13,7 @@ before_script:
 
 script:
   ./mvnw clean clover:setup test clover:aggregate clover:clover -Dspring.profiles.active=travis
+
+
+after-script:
+  - bash <(curl -s https://codecov.io/bash)
