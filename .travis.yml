@@ -5,9 +5,9 @@ addons:
   mariadb: '10.4'
 
 before_script:
-  - mysql -e 'create user travis@localhost;'
-  - mysql -e 'grant all on *.* to travis@localhost;'
-  - mysql -e 'create database buildz;'
+  - sudo mysql -e 'create user travis@localhost;'
+  - sudo mysql -e 'grant all on *.* to travis@localhost;'
+  - sudo mysql -e 'create database buildz;'
 
 script:
   ./mvnw clean clover:setup test clover:aggregate clover:clover -Dspring.profiles.active=travis
