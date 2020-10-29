@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/buildz
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: travis
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate.ddl-auto: validate
+  flyway:
+    enabled: true
+  jersey:
+    init:
+      jersey:
+        config:
+          server:
+            response:
+              setStatusOverSendError: true
