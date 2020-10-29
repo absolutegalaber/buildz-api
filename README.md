@@ -1,7 +1,7 @@
 # buildz-api
 
 [![Build Status](https://travis-ci.com/absolutegalaber/buildz-api.svg?branch=main)](https://travis-ci.com/absolutegalaber/buildz-api)
-[![codecov](https://codecov.io/gh/absolutegalaber/buildz-api/branch/main/graph/badge.svg?token=FWDNVM1EPA)](undefined)
+[![codecov](https://codecov.io/gh/absolutegalaber/buildz-api/branch/main/graph/badge.svg?token=FWDNVM1EPA)](https://codecov.io/gh/absolutegalaber/buildz-api)
 
 ## Build
 
