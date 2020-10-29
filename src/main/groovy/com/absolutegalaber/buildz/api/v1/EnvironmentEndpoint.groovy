@@ -3,6 +3,7 @@ package com.absolutegalaber.buildz.api.v1
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
 import com.absolutegalaber.buildz.domain.Environment
+import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.service.BuildService
 import com.absolutegalaber.buildz.service.EnvironmentService
@@ -34,13 +35,13 @@ class EnvironmentEndpoint {
     @GET
     @Path('/{name}')
     Environment get(@PathParam('name') String name) throws InvalidRequestException {
-        return environmentService.byName(name).orElseThrow({ -> new InvalidRequestException("No Environment found with name=" + name) })
+        return environmentService.byName(name).orElseThrow({ -> new InvalidRequestException("No Environment found with name=${name}") })
     }
 
     @POST
-    @Path('/verify')
-    Set<Build> verifyEnvironment(Set<Artifact> artifacts) {
-        Set<Build> toReturn = []
+    @Path('/verify-artifacts')
+    EnvironmentBuilds verifyEnvironment(Set<Artifact> artifacts) {
+        EnvironmentBuilds toReturn = new EnvironmentBuilds(environment: 'verification-result')
         artifacts.forEach({ artifact ->
             Optional<Build> build = buildService.latestArtifact(artifact)
             build.ifPresent(toReturn.&add)
