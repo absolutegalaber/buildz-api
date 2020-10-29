@@ -1,5 +1,7 @@
 # buildz-api
 
+[![Build Status](https://travis-ci.com/absolutegalaber/buildz-api.svg?branch=main)](https://travis-ci.com/absolutegalaber/buildz-api)
+
 ## Build
 
 ```shell script
