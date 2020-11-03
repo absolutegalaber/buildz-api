@@ -44,6 +44,7 @@ class EnvironmentService {
             //an update ==> we don't mess around here and clean the depending side environment.artifact
             //obviously this could be handled better...
             Environment current = environmentRepository.findById(environment.getId()).get()
+            current.name = environment.name
             current.getArtifacts().each { Artifact artifact ->
                 artifactRepository.delete(artifact)
             }

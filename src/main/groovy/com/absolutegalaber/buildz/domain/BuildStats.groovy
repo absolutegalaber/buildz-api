@@ -1,5 +1,10 @@
 package com.absolutegalaber.buildz.domain
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode
+@ToString
 class BuildStats {
     Set<String> projects
     Set<String> branches

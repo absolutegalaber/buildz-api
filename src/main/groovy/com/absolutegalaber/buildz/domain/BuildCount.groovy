@@ -1,5 +1,8 @@
 package com.absolutegalaber.buildz.domain
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import javax.persistence.*
 
 @Entity
@@ -9,6 +12,8 @@ import javax.persistence.*
                 @UniqueConstraint(name = 'UNIQUE_PROJECT_BRANCH', columnNames = ['project', 'branch'])
         ]
 )
+@ToString(includes = ['id', 'project', 'branch', 'counter'])
+@EqualsAndHashCode(includes = ['id', 'project', 'branch', 'counter'])
 class BuildCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

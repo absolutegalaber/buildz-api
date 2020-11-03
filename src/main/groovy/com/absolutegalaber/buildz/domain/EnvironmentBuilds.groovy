@@ -1,5 +1,10 @@
 package com.absolutegalaber.buildz.domain
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@ToString(includes = ['environment', 'builds'])
+@EqualsAndHashCode(includes = ['environment', 'builds'])
 class EnvironmentBuilds {
     String environment
     Map<String, Build> builds = [:]

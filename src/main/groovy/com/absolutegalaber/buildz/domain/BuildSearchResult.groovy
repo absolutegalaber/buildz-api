@@ -1,7 +1,11 @@
 package com.absolutegalaber.buildz.domain
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import org.springframework.data.domain.Page
 
+@ToString(includes = ['builds', 'page', 'totalElements', 'totalPages', 'hasNext', 'hasPrevious'])
+@EqualsAndHashCode(includes = ['builds', 'page', 'totalElements', 'totalPages', 'hasNext', 'hasPrevious'])
 class BuildSearchResult {
     List<Build> builds = []
     Integer page

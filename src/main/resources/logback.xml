@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.absolutegalaber" level="DEBUG"/>
+    <logger name="com.absolutegalaber" level="INFO"/>
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>

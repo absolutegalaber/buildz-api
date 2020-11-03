@@ -1,8 +1,12 @@
 package com.absolutegalaber.buildz.domain
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 
+@ToString(includes = ['project', 'branch', 'minBuildNumber', 'maxBuildNumber', 'labels'])
+@EqualsAndHashCode(includes = ['project', 'branch', 'minBuildNumber', 'maxBuildNumber', 'labels'])
 class BuildSearch {
     String project
     String branch
