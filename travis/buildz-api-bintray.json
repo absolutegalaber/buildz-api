@@ -1,6 +1,6 @@
 {
   "package": {
-    "name": "com.absolutegalaber",
+    "name": "com.absolutegalaber.buildz-api",
     "repo": "maven",
     "subject": "absolutegalaber",
     "desc": "Buildz-API Runnable SpringBoot Jar.",
@@ -28,7 +28,7 @@
   },
   "files": [
     {
-      "includePattern": "target/*.jar"
+      "includePattern": "target/(.jar)"
     }
   ],
   "publish": true
