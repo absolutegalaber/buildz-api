@@ -1,15 +1,15 @@
 language: java
 jdk:
-- openjdk11
+  - openjdk11
 addons:
   mariadb: '10.4'
 before_script:
-- sudo mysql -e 'create user travis@localhost;'
-- sudo mysql -e 'grant all on *.* to travis@localhost;'
-- sudo mysql -e 'create database buildz;'
+  - sudo mysql -e 'create user travis@localhost;'
+  - sudo mysql -e 'grant all on *.* to travis@localhost;'
+  - sudo mysql -e 'create database buildz;'
 script: "./mvnw clean clover:setup test clover:aggregate clover:clover -Dspring.profiles.active=travis"
 after-script:
-- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: bintray
   file: travis/buildz-api-bintray.json
@@ -19,5 +19,5 @@ deploy:
   passphrase: Optional. In case a passphrase is configured on Bintray and GPG signing
     is used
   skip_cleanup: true
-  #on: release
+  on: release
   dry_run: true
