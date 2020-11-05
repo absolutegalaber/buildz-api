@@ -12,8 +12,8 @@ after-script:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: bintray
-  file: travis/buildz-api-bintray.json
-  user: absolutegalaber
+  file: .deploy-to-bintray.json
+  user: esistegalaber
   key:
     secure: UYZ8Yh1mHiegE0LaXq7U8+7XuLinxwPISRx+tbAQDCIaRu96ja6t9bI9hF2WxrvBKguCy2w8WiYnDXtJOGDQRWDDmsDbPeb1VXVTVr9eMt4HOHDDE8jwzOVBdPlZh6KwfVY3R/B772YdmpaE6p7a2uYHTLfuWOIL0EVHkfh/w8ND8r+93feCsWnwQeJZqh+o5CAm0cIslabGsHyYJWdyNP5ZhGtKR4eRaC3hLsnj27KmXiAmAKKZc5tZ20hVwcOWuBIUlXrun93yAZRAS84twFxRQm0ObORfwEyXo9LPtca+4eLvdfxTER1/Us9a1tT7OZ4+mOh/adM1mnWIMNmTZYKSbM01xDIOKGQ6f968A+RVlktk+l+dBQ8O0vvST72W/nnzFcc/SJgNpBaoRm/EuNAAYUQAKcS0iQZfjGTqEsIAIjHPC52j4eV5Ir5l1h18uBv7FZXu8IFi7AYTEsdRf2s5RlqxvMNzLHf7M96FBFydlXNiefUBl1413/0yvQZmrx/64uRK+5jcV9iuGrsAfLK+rBSfcF/n5Jx49sVWYeToo2NOi+S1L2L9t+cyoQJwqK6m07tcvDAJfAPHtb3mI1wOVLVlhmJhDi5YQNRgPA68rkkRQ4WU4LGIKXB9HuCsViijeoF0KT5Fpth0FQolyi3SZKQCs8hHyv1gTZeLuVk=
   skip_cleanup: true
