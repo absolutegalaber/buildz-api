@@ -22,8 +22,7 @@
   "version": {
     "name": "0.0.1",
     "desc": "First Version",
-    "released": "2015-01-04",
-    "vcs_tag": "0.5",
+    "released": "2020-11-05",
     "gpgSign": false
   },
   "files": [
