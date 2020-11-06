@@ -2,7 +2,7 @@
   "package": {
     "name": "buildz-api",
     "repo": "buildz-maven",
-    "subject": "absolutegalaber",
+    "subject": "esistegalaber",
     "desc": "Buildz-API Runnable SpringBoot Jar.",
     "website_url": "https://github.com/absolutegalaber/buildz-api",
     "issue_tracker_url": "https://github.com/absolutegalaber/buildz-api/issues",
@@ -17,7 +17,8 @@
       "build-tracking"
     ],
     "public_download_numbers": false,
-    "public_stats": false
+    "public_stats": false,
+    "userOrg": "absolutegalaber"
   },
   "version": {
     "name": "0.0.1",
