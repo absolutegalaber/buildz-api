@@ -133,4 +133,34 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>esistegalaber</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>bintray-esistegalaber-maven</id>
+                    <name>esistegalaber-maven</name>
+                    <url>https://api.bintray.com/maven/esistegalaber/maven/buildz/;publish=1</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>absolutegalaber</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>bintray-absolutegalaber-buildz-maven</id>
+                    <name>absolutegalaber-buildz-maven</name>
+                    <url>https://api.bintray.com/maven/absolutegalaber/buildz-maven/buildz-api/;publish=1</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
 </project>

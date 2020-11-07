@@ -1,20 +1,12 @@
 language: java
 jdk:
-- openjdk11
+  - openjdk11
 addons:
-  mariadb: '10.4'
+  mariadb: '10.5'
 before_script:
-- sudo mysql -e 'create user travis@localhost;'
-- sudo mysql -e 'grant all on *.* to travis@localhost;'
-- sudo mysql -e 'create database buildz;'
+  - sudo mysql -e 'create user travis@localhost;'
+  - sudo mysql -e 'grant all on *.* to travis@localhost;'
+  - sudo mysql -e 'create database buildz;'
 script: "./mvnw clean clover:setup test clover:aggregate clover:clover -Dspring.profiles.active=travis"
 after-script:
-- bash <(curl -s https://codecov.io/bash)
-deploy:
-  provider: bintray
-  file: ".deploy-to-bintray.json"
-  user: esistegalaber
-  key:
-    secure: "ZSVOkfRt8OoetxYV464nI3eqKJ//92XME4769peUysFK5JIZeBsiTQ+Aa1LXhLfAos04XajaWoD5vF84m+hwwhFfJYsxRvcYQWxs5jxr5wJuvVzsz14+SSpqp+e/juoezyVlQbkI0ISRvY+cnDZgXF9un8a8dgqyHVtc86WIchBhyNy176HLb9+k15+yl4i8nJVvdUag0rm5WbeanBOj/q0xUn6tgwFcrrbi3klAa3L5ZZJodG/qj0arfPkl+wUTaFkYj9RSzqyFf953Iz4q2sfMl9879zaUyiwJE9dQYYwlMf4ff72k7D+ak3ZnWN54vUT8jpnMn+icaAeHX3Qzpme0Bi+9LYSUR0iq3NmmJ3VYPP6cr61rzcrYY6b6CACcI6RF51zqlv0oyOf/mUBGz9y4493/JJWy3KbskOP6prUAiLi7UZkpKOIl4hHMA0EInzL3g9jV1xuKlMDQUnSnEmOn1Dw/46/pxwrNXOVmZr3rqSD68iaDNw04Duq8poLI2JPrgyRZ4RE8u5tkoKZmIiEEm9zzkWTr2F1iELjvUr1DvH7h/Jzz8tKfjgVv0t1GXKgZuzZx/wxqlBD/6X5VCchcTPiT3cMCueU46qQUio+TYerhYffNYxGi8oTLLlbwPBduQLlryXUmBud/zqG3z/lMMly9GoQVP5NqnzOIEyo="
-  skip_cleanup: true
-  on: release
+  - bash <(curl -s https://codecov.io/bash)

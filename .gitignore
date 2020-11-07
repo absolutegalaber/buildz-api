@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Settings.xmls for the different deployment.profiles contain (secret) API keys.
+settings.xml
