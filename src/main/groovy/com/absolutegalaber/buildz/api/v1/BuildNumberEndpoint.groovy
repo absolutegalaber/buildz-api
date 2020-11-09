@@ -2,17 +2,12 @@ package com.absolutegalaber.buildz.api.v1
 
 import com.absolutegalaber.buildz.domain.BuildCount
 import com.absolutegalaber.buildz.service.BuildCountService
-import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.*
 
 import javax.transaction.Transactional
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
 
-@Component
-@Path('v1/build-numbers')
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 @Transactional
+@RestController
 class BuildNumberEndpoint {
     private final BuildCountService buildCountService
 
@@ -20,21 +15,18 @@ class BuildNumberEndpoint {
         this.buildCountService = buildCountService
     }
 
-    @POST
-    @Path("/next")
-    BuildCount next(BuildCount buildCount) {
+    @PostMapping("/api/v1/build-numbers/next")
+    BuildCount next(@RequestBody BuildCount buildCount) {
         return buildCountService.next(buildCount.getProject(), buildCount.getBranch())
     }
 
-    @GET
-    @Path("/current/{project}/{branch}")
-    BuildCount current(@PathParam("project") String project, @PathParam("branch") String branch) {
+    @GetMapping('/api/v1/build-numbers/current/{project}/{branch}')
+    BuildCount current(@PathVariable(name = 'project') String project, @PathVariable(name = 'branch') String branch) {
         return buildCountService.current(project, branch)
     }
 
-    @POST
-    @Path("/set")
-    BuildCount set(BuildCount buildCount) {
+    @PostMapping('/api/v1/build-numbers/set')
+    BuildCount set(@RequestBody BuildCount buildCount) {
         buildCountService.set(buildCount.getProject(), buildCount.getBranch(), buildCount.getCounter())
     }
 }

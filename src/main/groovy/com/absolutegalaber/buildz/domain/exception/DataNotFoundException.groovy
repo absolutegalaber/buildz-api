@@ -1,7 +1,10 @@
 package com.absolutegalaber.buildz.domain.exception
 
-class DataNotFoundException extends Exception {
+
+import org.springframework.http.HttpStatus
+
+class DataNotFoundException extends BuildzApiException {
     DataNotFoundException(String message) {
-        super(message)
+        super(message,HttpStatus.NOT_FOUND, 'not-found', 'No such data', )
     }
 }

@@ -5,16 +5,11 @@ import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.service.BuildService
 import com.absolutegalaber.buildz.service.StatsService
-import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.*
 
 import javax.transaction.Transactional
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
 
-@Component
-@Path('v1/builds')
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@RestController
 @Transactional
 class BuildEndpoint {
     private final BuildService buildService
@@ -25,42 +20,36 @@ class BuildEndpoint {
         this.statsService = statsService
     }
 
-    @GET
-    @Path('/stats')
+    @GetMapping('/api/v1/builds/stats')
     BuildStats stats() {
         statsService.stats()
     }
 
-    @POST
-    @Path('/search')
-    BuildSearchResult search(BuildSearch search) {
+    @PostMapping('/api/v1/builds/search')
+    BuildSearchResult search(@RequestBody BuildSearch search) {
         buildService.search(search)
     }
 
-    @GET
-    @Path('/{buildId}')
-    Build get(@PathParam('buildId') Long buildId) throws DataNotFoundException {
+    @GetMapping('/api/v1/builds/{buildId}')
+    Build get(@PathVariable(name = 'buildId') Long buildId) throws DataNotFoundException {
         Optional<Build> build = buildService.byId(buildId)
         build.orElseThrow(
                 { -> new DataNotFoundException("No Build found for buildId=" + buildId) }
         )
     }
 
-    @POST
-    @Path('/create')
-    Build create(Build build) {
+    @PostMapping('/api/v1/builds/create')
+    Build create(@RequestBody Build build) {
         return buildService.create(build.getProject(), build.getBranch(), build.getBuildNumber())
     }
 
-    @POST
-    @Path('/add-labels/{buildId}')
-    Build addLabels(@PathParam("buildId") Long buildId, List<BuildLabel> buildLabels) throws InvalidRequestException {
+    @PostMapping('/api/v1/builds/add-labels/{buildId}')
+    Build addLabels(@PathVariable(name = "buildId") Long buildId, @RequestBody List<BuildLabel> buildLabels) throws InvalidRequestException {
         buildService.addLabels(buildId, buildLabels)
     }
 
-    @GET
-    @Path('/of-environment/{name}')
-    EnvironmentBuilds environment(@PathParam('name') String name) throws InvalidRequestException {
+    @GetMapping('/api/v1/builds/of-environment/{name}')
+    EnvironmentBuilds environment(@PathVariable(name = 'name') String name) throws InvalidRequestException {
         buildService.ofEnvironment(name)
     }
 }
