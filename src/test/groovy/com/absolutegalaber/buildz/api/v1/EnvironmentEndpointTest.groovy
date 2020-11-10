@@ -3,6 +3,7 @@ package com.absolutegalaber.buildz.api.v1
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Environment
+import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -46,9 +47,21 @@ class EnvironmentEndpointTest extends BaseRestSpec {
         responseEntity.getBody().id
     }
 
-    def "VerifyEnvironment"() {
-    }
+    def "VerifyEnvironment with 1 articfact"() {
+        given:
+        String VERIFY_URL = "http://localhost:${port}/api/v1/environments/verify-artifacts"
+        Artifact artifact = new Artifact(
+                project: 'backend',
+                branch: 'main',
+                labels: ['integration-test': 'ok']
+        )
+        when:
+        ResponseEntity<EnvironmentBuilds> responseEntity = restTemplate.postForEntity(VERIFY_URL, [artifact], EnvironmentBuilds)
 
-    def "Delete"() {
+        then:
+        responseEntity.getStatusCode() == HttpStatus.OK
+
+        and:
+        responseEntity.getBody().builds.size() == 1
     }
 }
