@@ -87,7 +87,6 @@ class BuildEndpointTest extends BaseRestSpec {
 
         and:
         responseEntity.getBody().id
-
     }
 
     def "AddLabels"() {
@@ -109,5 +108,20 @@ class BuildEndpointTest extends BaseRestSpec {
     }
 
     def "Environment"() {
+        given:
+        String envName = 'main'
+        String ENVIRONMENT_URL = "http://localhost:${port}/api/v1/builds/of-environment/${envName}"
+
+        when:
+        ResponseEntity<EnvironmentBuilds> responseEntity = restTemplate.getForEntity(ENVIRONMENT_URL, EnvironmentBuilds)
+
+        then:
+        responseEntity.statusCode == HttpStatus.OK
+
+        and:
+        responseEntity.getBody().environment == envName
+
+        and:
+        !responseEntity.getBody().builds.isEmpty()
     }
 }
