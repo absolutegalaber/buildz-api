@@ -4,10 +4,11 @@ import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.EnvironmentBuilds
+import com.absolutegalaber.buildz.domain.ExceptionInfo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class EnvironmentEndpointTest extends BaseRestSpec {
+class EnvironmentEndpointImplTest extends BaseRestSpec {
     def "Create new and delete it"() {
         given:
         String newEnvName = 'new-crazy-env'
@@ -45,6 +46,21 @@ class EnvironmentEndpointTest extends BaseRestSpec {
 
         and:
         responseEntity.getBody().id
+    }
+
+    def "Get DataNotFound"() {
+        given:
+        String envName = 'wrongName'
+        String GET_URL = "http://localhost:${port}/api/v1/environments/${envName}"
+
+        when:
+        ResponseEntity<ExceptionInfo> responseEntity = restTemplate.getForEntity(GET_URL, ExceptionInfo)
+
+        then:
+        responseEntity.statusCode == HttpStatus.NOT_FOUND
+
+        and:
+        responseEntity.getBody().key == 'not-found'
     }
 
     def "VerifyEnvironment with 1 articfact"() {
