@@ -6,10 +6,5 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate.ddl-auto: validate
-server:
-  port: 8080
   flyway:
     enabled: true
-springdoc:
-  packagesToScan: com.absolutegalaber.buildz.api.v1
-
