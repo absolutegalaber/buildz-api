@@ -5,7 +5,7 @@ import com.absolutegalaber.buildz.domain.BuildCount
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class BuildNumberEndpointTest extends BaseRestSpec {
+class BuildNumberEndpointImplTest extends BaseRestSpec {
 
     def "Current() for existing project"() {
         given:

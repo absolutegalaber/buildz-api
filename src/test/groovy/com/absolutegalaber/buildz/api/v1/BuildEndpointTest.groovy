@@ -6,17 +6,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 class BuildEndpointTest extends BaseRestSpec {
-    def "Stats"() {
-        given:
-        String STATS_URL = "http://localhost:${port}/api/v1/builds/stats"
-
-        when:
-        ResponseEntity<BuildStats> responseEntity = restTemplate.getForEntity(STATS_URL, BuildStats)
-
-        then:
-        responseEntity.statusCode == HttpStatus.OK
-    }
-
     def "Search"() {
         given:
         String SEARCH_URL = "http://localhost:${port}/api/v1/builds/search"

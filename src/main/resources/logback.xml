@@ -8,6 +8,8 @@
 
     <logger name="com.absolutegalaber" level="INFO"/>
     <logger name="org.springframework" level="WARN"/>
+    <logger name="io.springfox" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.flywaydb" level="INFO"/>
