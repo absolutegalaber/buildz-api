@@ -23,11 +23,13 @@ class BuildzApiDocsConfig {
                 .ignoredParameterTypes(MetaClass)
     }
 
-    ApiInfo buildzApiInfo() {
+    static ApiInfo buildzApiInfo() {
         new ApiInfoBuilder()
                 .title('Buildz-API')
                 .description('Manage you Build Numbers and Artifacts coherently.')
-                .license('Apache 2.0')
+                .version('1.0')
+                .license('Apache License 2.0')
+                .licenseUrl('http://www.apache.org/licenses/LICENSE-2.0')
                 .build()
     }
 

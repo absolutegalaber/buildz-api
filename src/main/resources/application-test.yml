@@ -9,5 +9,3 @@ spring:
     hibernate.ddl-auto: validate
   flyway:
     enabled: true
-springdoc:
-  packagesToScan: com.absolutegalaber.buildz.api.v1
