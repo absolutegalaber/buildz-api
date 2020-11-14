@@ -6,12 +6,13 @@
         </encoder>
     </appender>
 
-    <logger name="org.absolutegalaber" level="INFO"/>
-    <logger name="org.springframework" level="WARN"/>
-    <logger name="org.jaxws" level="WARN"/>
-    <logger name="org.hibernate" level="WARN"/>
+    <logger name="com.absolutegalaber" level="DEBUG"/>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="io.springfox" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="org.hibernate" level="INFO"/>
     <logger name="org.apache" level="WARN"/>
-    <logger name="org.flywaydb" level="WARN"/>
+    <logger name="org.flywaydb" level="INFO"/>
     <logger name="com.zaxxer" level="WARN"/>
 
     <root level="DEBUG">

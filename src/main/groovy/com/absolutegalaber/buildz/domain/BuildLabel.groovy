@@ -7,16 +7,21 @@ import groovy.transform.ToString
 import javax.persistence.*
 
 @Entity
-@Table(name = 'build_label')
+@Table(
+        name = 'build_label',
+        indexes = [
+                @Index(name = 'idx_build_label_value', columnList = 'label_key')
+        ]
+)
 @ToString(includes = ['id', 'key', 'value'])
 @EqualsAndHashCode(includes = ['id', 'key', 'value'])
-class BuildLabel {
+class BuildLabel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = 'build_id', nullable = false)
+    @ManyToOne(targetEntity = Build, optional = false)
+    @JoinColumn(name = 'build_id', nullable = false, foreignKey = @ForeignKey(name = 'fk_build', value = ConstraintMode.CONSTRAINT))
     @JsonBackReference
     Build build
 

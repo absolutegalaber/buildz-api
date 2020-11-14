@@ -5,7 +5,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode
 @ToString
-class BuildStats {
+class BuildStats implements Serializable {
     Set<String> projects
     Set<String> branches
     Set<String> environments

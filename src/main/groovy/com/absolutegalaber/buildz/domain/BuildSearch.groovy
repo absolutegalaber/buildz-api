@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort
 
 @ToString(includes = ['project', 'branch', 'minBuildNumber', 'maxBuildNumber', 'labels'])
 @EqualsAndHashCode(includes = ['project', 'branch', 'minBuildNumber', 'maxBuildNumber', 'labels'])
-class BuildSearch {
+class BuildSearch implements Serializable {
     String project
     String branch
     Long minBuildNumber

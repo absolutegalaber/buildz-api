@@ -1,6 +1,6 @@
 package com.absolutegalaber.buildz.domain
 
-class ExceptionInfo {
+class ExceptionInfo implements Serializable {
     String key
     String description
     String message

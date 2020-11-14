@@ -5,7 +5,7 @@ import groovy.transform.ToString
 
 @ToString(includes = ['environment', 'builds'])
 @EqualsAndHashCode(includes = ['environment', 'builds'])
-class EnvironmentBuilds {
+class EnvironmentBuilds implements Serializable {
     String environment
     Map<String, Build> builds = [:]
 

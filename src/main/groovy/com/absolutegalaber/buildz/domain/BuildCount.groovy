@@ -8,13 +8,13 @@ import javax.persistence.*
 @Entity
 @Table(
         name = 'build_count',
-        uniqueConstraints = [
-                @UniqueConstraint(name = 'UNIQUE_PROJECT_BRANCH', columnNames = ['project', 'branch'])
+        indexes = [
+                @Index(name = 'unq_idx_project_branch', columnList = 'project,branch', unique = true)
         ]
 )
 @ToString(includes = ['id', 'project', 'branch', 'counter'])
 @EqualsAndHashCode(includes = ['id', 'project', 'branch', 'counter'])
-class BuildCount {
+class BuildCount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
@@ -29,6 +29,6 @@ class BuildCount {
     Long counter
 
     void increment() {
-        counter++;
+        counter++
     }
 }
