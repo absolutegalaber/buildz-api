@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page
 
 @ToString(includes = ['builds', 'page', 'totalElements', 'totalPages', 'hasNext', 'hasPrevious'])
 @EqualsAndHashCode(includes = ['builds', 'page', 'totalElements', 'totalPages', 'hasNext', 'hasPrevious'])
-class BuildSearchResult {
+class BuildSearchResult implements Serializable {
     List<Build> builds = []
     Integer page
     Long totalElements

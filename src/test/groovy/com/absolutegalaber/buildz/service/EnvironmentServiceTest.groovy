@@ -26,7 +26,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
         where:
         name      | expected | message
-        'main'  | true     | 'ByName(): finds existing Environment by name'
+        'main'    | true     | 'ByName(): finds existing Environment by name'
         'missing' | false    | 'ByName(): is empty for non-existing environment name'
 
 
@@ -101,6 +101,6 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
     def "Delete"() {
         expect:
-        service.delete('master-test-stage-1')
+        service.delete('main')
     }
 }

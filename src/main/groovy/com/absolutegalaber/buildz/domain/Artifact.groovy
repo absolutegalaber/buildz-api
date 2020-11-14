@@ -10,12 +10,12 @@ import javax.persistence.*
 @Table(name = 'artifact')
 @ToString(includes = ['id', 'project', 'branch', 'labels'])
 @EqualsAndHashCode(includes = ['id', 'project', 'branch', 'labels'])
-class Artifact {
+class Artifact implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, targetEntity = Environment, fetch = FetchType.EAGER)
     @JoinColumn(name = 'environment_id', nullable = false)
     @JsonBackReference
     Environment environment

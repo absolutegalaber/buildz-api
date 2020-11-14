@@ -8,14 +8,13 @@ import javax.persistence.*
 @Entity
 @Table(
         name = 'build',
-        uniqueConstraints = [
-                @UniqueConstraint(name = 'UNIQUE_BUILD', columnNames = ['project', 'branch', 'build_number'])
+        indexes = [
+                @Index(name = 'unq_idx_project_branch', columnList = 'project,branch,build_number')
         ]
-
 )
 @ToString(includes = ['id', 'project', 'branch', 'buildNumber'])
 @EqualsAndHashCode(includes = ['id', 'project', 'branch', 'buildNumber'])
-class Build {
+class Build implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id

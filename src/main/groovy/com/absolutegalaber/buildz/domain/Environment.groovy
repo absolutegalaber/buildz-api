@@ -8,13 +8,13 @@ import javax.persistence.*
 @Entity
 @Table(
         name = 'environment',
-        uniqueConstraints = [
-                @UniqueConstraint(name = 'UNIQUE_ENVIRONMENT_NAME', columnNames = 'name')
+        indexes = [
+                @Index(name = 'unq_env_name', columnList = 'name', unique = true)
         ]
 )
 @ToString(includes = ['id', 'name'])
 @EqualsAndHashCode(includes = ['id', 'name'])
-class Environment {
+class Environment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
