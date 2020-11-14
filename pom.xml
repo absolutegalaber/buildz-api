@@ -138,9 +138,33 @@
                 <version>${clover.version}</version>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <profiles>
+        <profile>
+            <id>travis</id>
+            <properties>
+                <spring.profiles.active>travis</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>josip</id>
+            <properties>
+                <spring.profiles.active>josip</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+        </profile>
         <profile>
             <id>esistegalaber</id>
             <activation>
