@@ -43,7 +43,7 @@ class BuildService {
     Build addLabels(Long buildId, List<BuildLabel> labels) throws InvalidRequestException {
         Build build = byId(buildId).orElseThrow({ ->
             //TODO: Umbau: Exception im Endpoint werfenn
-            new InvalidRequestException("No Build found for buildId=" + buildId)
+            new InvalidRequestException("No Build found for buildId='${buildId}'")
         })
         labels.forEach({ buildLabel ->
             build.getLabels().add(new BuildLabel(
@@ -126,18 +126,18 @@ class BuildService {
         Optional<Environment> environment = environmentRepository.findOne(environmentWithName(environmentName))
         if (environment.isEmpty()) {
             //TODO: Umbau: Exception im Endpoint werfenn
-            throw new InvalidRequestException("No Environment found with name=" + environmentName)
+            throw new InvalidRequestException("No Environment found with name='${environmentName}'")
         }
         Environment theEnv = environment.get()
         EnvironmentBuilds toReturn = new EnvironmentBuilds(
                 environment: theEnv.name
         )
-        theEnv.getArtifacts().each { Artifact theArtifact ->
+        theEnv.artifacts.forEach({ Artifact theArtifact ->
             latestArtifact(theArtifact)
                     .ifPresent({ Build build ->
                         toReturn.add(build)
                     })
-        }
-        return toReturn;
+        })
+        return toReturn
     }
 }

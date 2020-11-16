@@ -45,9 +45,9 @@ class EnvironmentService {
             //obviously this could be handled better...
             Environment current = environmentRepository.findById(environment.getId()).get()
             current.name = environment.name
-            current.getArtifacts().each { Artifact artifact ->
+            current.artifacts.forEach({ Artifact artifact ->
                 artifactRepository.delete(artifact)
-            }
+            })
             current.getArtifacts().clear()
         } else {
             //an insert -> check uniqueness of name
@@ -56,11 +56,11 @@ class EnvironmentService {
             }
             environment = create(environment.getName())
         }
-        theArtifacts.each { Artifact artifact ->
+        theArtifacts.forEach({ Artifact artifact ->
             artifact.setEnvironment(environment)
             environment.artifacts.add(artifact)
             artifactRepository.save(artifact)
-        }
+        })
         return environment
     }
 
