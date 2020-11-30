@@ -46,7 +46,7 @@ class BuildNumberEndpointImplTest extends BaseRestSpec {
     def "Next() and Set()"() {
         given:
         String project = 'backend'
-        String branch = 'feature/awesome-feature'
+        String branch = 'feature/feature-backend'
         BuildCount nextBuildCount = new BuildCount(
                 project: project,
                 branch: branch

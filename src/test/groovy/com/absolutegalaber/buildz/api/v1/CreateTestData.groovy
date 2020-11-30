@@ -12,8 +12,7 @@ class CreateTestData extends BaseRestSpec {
     def "Create"() {
         given:
         String[] projects = ['backend', 'frontend', 'backoffice']
-        String[] branches = ['main', 'next', 'feature/awesome-feature']
-        String NEXT_NUMBER_URL = "http://localhost:${port}/api/v1/build-numbers/next"
+        String[] branches = ['main', 'next', 'feature']
         String CREATE_BUILD_URL = "http://localhost:${port}/api/v1/builds/create"
         String ADD_LABEL_URL = "http://localhost:${port}/api/v1/builds/add-labels"
         List<Long> buildIds = []
@@ -21,10 +20,11 @@ class CreateTestData extends BaseRestSpec {
         when:
         projects.each { String project ->
             branches.each { String branch ->
+                String branchName = 'feature'.equals(branch) ? "feature-${project}" : branch
                 10.times { Integer i ->
                     Build setBuildCount = new Build(
                             project: project,
-                            branch: branch,
+                            branch: branchName,
                             buildNumber: i + 1
                     )
                     ResponseEntity<Build> created = restTemplate.postForEntity(CREATE_BUILD_URL, setBuildCount, Build)

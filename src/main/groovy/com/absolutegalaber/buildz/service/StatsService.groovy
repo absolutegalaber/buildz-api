@@ -21,9 +21,14 @@ class StatsService {
     }
 
     BuildStats stats() {
+        List<String> projects = buildRepository.distinctProjects()
+        Map<String, List<String>> branchData = new HashMap<>()
+        projects.each { String project ->
+            branchData.put(project, buildRepository.distinctBranchesOf(project))
+        }
         new BuildStats(
-                projects: buildRepository.distinctProjects() as Set<String>,
-                branches: buildRepository.distinctBranches() as Set<String>,
+                projects: projects,
+                projectBranches: branchData,
                 environments: environmentRepository.distinctEnvironments() as Set<String>,
                 labelKeys: buildLabelRepository.distinctLabelKeys(),
                 numberOfBuilds: buildRepository.count(),

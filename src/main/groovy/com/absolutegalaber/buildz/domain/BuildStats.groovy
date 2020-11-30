@@ -6,8 +6,8 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 @ToString
 class BuildStats implements Serializable {
-    Set<String> projects
-    Set<String> branches
+    List<String> projects
+    Map<String, List<String>> projectBranches = new HashMap<>()
     Set<String> environments
     Set<String> labelKeys
     Long numberOfBuilds
