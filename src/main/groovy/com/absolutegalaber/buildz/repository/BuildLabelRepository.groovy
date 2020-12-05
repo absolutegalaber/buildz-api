@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.PagingAndSortingRepository
 
 interface BuildLabelRepository extends PagingAndSortingRepository<BuildLabel, Long>, JpaSpecificationExecutor<BuildLabel> {
-    @Query("SELECT DISTINCT l.key FROM BuildLabel l")
+    @Query("SELECT DISTINCT l.key FROM BuildLabel l ORDER BY l.key")
     Set<String> distinctLabelKeys()
 }

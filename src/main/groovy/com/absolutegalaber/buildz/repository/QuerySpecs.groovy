@@ -119,4 +119,13 @@ class QuerySpecs {
             }
         }
     }
+
+    static Specification<Branch> ofProject(Project project) {
+        new Specification<Branch>() {
+            @Override
+            Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.equal(root.get(Branch_.project), project)
+            }
+        }
+    }
 }

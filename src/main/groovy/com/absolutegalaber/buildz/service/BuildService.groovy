@@ -138,6 +138,6 @@ class BuildService {
                         toReturn.add(build)
                     })
         })
-        return toReturn
+        toReturn
     }
 }
