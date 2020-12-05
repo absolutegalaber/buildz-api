@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "projects", description = "Provides Management of Projects and Branches thereof.")
 public interface ProjectEndpoint {
@@ -25,6 +26,6 @@ public interface ProjectEndpoint {
             },
             tags = {"projects"}
     )
-    @GetMapping("/api/v1/projects/")
-    ProjectData getProjectData();
+    @GetMapping("/api/v1/projects")
+    ProjectData getProjectData(@RequestParam(name = "include-inactive", required = false, defaultValue = "false") Boolean includeInactive);
 }

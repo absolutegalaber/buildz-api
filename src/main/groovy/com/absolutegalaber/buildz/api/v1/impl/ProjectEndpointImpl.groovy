@@ -17,7 +17,7 @@ class ProjectEndpointImpl implements ProjectEndpoint {
     }
 
     @Override
-    ProjectData getProjectData() {
-        projectService.dataForAllProjects()
+    ProjectData getProjectData(Boolean includeInactive) {
+        projectService.dataForAllProjects(includeInactive)
     }
 }

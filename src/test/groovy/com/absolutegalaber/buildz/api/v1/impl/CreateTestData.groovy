@@ -1,4 +1,4 @@
-package com.absolutegalaber.buildz.api.v1
+package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.domain.Build
