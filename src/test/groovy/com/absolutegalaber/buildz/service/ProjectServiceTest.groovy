@@ -31,4 +31,21 @@ class ProjectServiceTest extends BaseBuildzSpec {
         and:
         !dataForAllProjects.labelKeys.isEmpty()
     }
+
+    def "DataForAllProjects including inactive ones"() {
+        when:
+        ProjectData dataForAllProjects = service.dataForAllProjects(true)
+
+        then:
+        dataForAllProjects.projects.size() == 4
+
+        and:
+        dataForAllProjects.projectBranches.size() == 4
+
+        and:
+        dataForAllProjects.projectBranches.find { it.key == 'abandoned' }.value.size() == 2
+
+        and:
+        !dataForAllProjects.labelKeys.isEmpty()
+    }
 }

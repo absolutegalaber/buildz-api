@@ -20,4 +20,8 @@ class Project implements Serializable{
             cascade = CascadeType.ALL, fetch = FetchType.EAGER
     )
     List<Branch> branches = new ArrayList<>()
+
+    @Basic(optional = false)
+    @Column(name = 'active', nullable = false)
+    Boolean active = true
 }

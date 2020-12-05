@@ -1,6 +1,7 @@
 create table `project`
 (
     `id` varchar(255) not null,
+    `active`     tinyint(1)   not null default 1,
     primary key (`id`)
 )
     engine = innodb

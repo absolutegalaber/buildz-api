@@ -120,11 +120,30 @@ class QuerySpecs {
         }
     }
 
-    static Specification<Branch> ofProject(Project project) {
+    static Specification<Branch> ofProject(Project project, Boolean includeInactive) {
         new Specification<Branch>() {
             @Override
             Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaBuilder.equal(root.get(Branch_.project), project)
+                Predicate ofProject = criteriaBuilder.equal(root.get(Branch_.project), project)
+                if (includeInactive) {
+                    return ofProject
+                }
+                criteriaBuilder.and(
+                        ofProject,
+                        criteriaBuilder.equal(root.get(Branch_.active), true)
+                )
+            }
+        }
+    }
+
+    static Specification<Project> allRelevantProjects(Boolean includeInactive) {
+        new Specification<Project>() {
+            @Override
+            Predicate toPredicate(Root<Project> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                if (includeInactive) {
+                    return criteriaBuilder.conjunction()
+                }
+                criteriaBuilder.equal(root.get(Project_.active), true)
             }
         }
     }

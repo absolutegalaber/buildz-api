@@ -405,18 +405,24 @@ VALUES (2, 'main', 'frontend', 1);
 INSERT INTO environment (id, name)
 VALUES (2, 'feature-test-stage-1');
 
-INSERT INTO project(id)
-VALUES ('backend'),
-       ('backoffice'),
-       ('frontend');
+INSERT INTO project(id, active)
+VALUES ('backend', 1),
+       ('backoffice', 1),
+       ('frontend', 1),
+       ('abandoned', 0);
 
 INSERT INTO branch(name, project_id, active)
 VALUES ('main', 'backend', 1),
        ('next', 'backend', 1),
        ('feature-backend', 'backend', 1),
+       ('merged-feature-backend', 'backend', 0),
        ('main', 'frontend', 1),
        ('next', 'frontend', 1),
        ('feature-frontend', 'frontend', 1),
+       ('merged-feature-frontend', 'frontend', 0),
        ('main', 'backoffice', 1),
        ('next', 'backoffice', 1),
-       ('feature-backoffice', 'backoffice', 1);
+       ('feature-backoffice', 'backoffice', 1),
+       ('merged-feature-backoffice', 'backoffice', 0),
+       ('main', 'abandoned', 1),
+       ('merged', 'abandoned', 0);
