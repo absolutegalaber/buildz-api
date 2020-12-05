@@ -5,6 +5,7 @@ import com.absolutegalaber.buildz.domain.*
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.service.BuildService
+import com.absolutegalaber.buildz.service.ProjectService
 import com.absolutegalaber.buildz.service.StatsService
 import org.springframework.web.bind.annotation.RestController
 
@@ -14,9 +15,11 @@ import javax.transaction.Transactional
 @Transactional
 class BuildEndpointImpl implements BuildEndpoint {
     private final BuildService buildService
+    private final ProjectService projectService
 
-    BuildEndpointImpl(BuildService buildService, StatsService statsService) {
+    BuildEndpointImpl(BuildService buildService, ProjectService projectService) {
         this.buildService = buildService
+        this.projectService = projectService
     }
 
     @Override
@@ -34,7 +37,10 @@ class BuildEndpointImpl implements BuildEndpoint {
 
     @Override
     Build create(Build build) {
-        return buildService.create(build.getProject(), build.getBranch(), build.getBuildNumber())
+        Build toReturn = buildService.create(build.getProject(), build.getBranch(), build.getBuildNumber())
+        projectService.trackProject(build.getProject())
+        projectService.trackBranchOf(build.getProject(), build.getBranch())
+        toReturn
     }
 
     @Override

@@ -136,6 +136,18 @@ class QuerySpecs {
         }
     }
 
+    static Specification<Branch> ofProjectWithName(Project project, String branchName) {
+        new Specification<Branch>() {
+            @Override
+            Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(Branch_.project), project),
+                        criteriaBuilder.equal(root.get(Branch_.name), branchName)
+                )
+            }
+        }
+    }
+
     static Specification<Project> allRelevantProjects(Boolean includeInactive) {
         new Specification<Project>() {
             @Override

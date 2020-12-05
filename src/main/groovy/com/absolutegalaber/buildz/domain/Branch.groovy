@@ -11,6 +11,7 @@ import javax.persistence.*
 @EqualsAndHashCode(includes = ['id', 'name'])
 class Branch implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
     @Basic(optional = false)

@@ -9,8 +9,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-import static com.absolutegalaber.buildz.repository.QuerySpecs.allRelevantProjects
-import static com.absolutegalaber.buildz.repository.QuerySpecs.ofProject
+import static com.absolutegalaber.buildz.repository.QuerySpecs.*
 
 @Service
 @Transactional
@@ -23,6 +22,27 @@ class ProjectService {
         this.projectRepository = projectRepository
         this.branchRepository = branchRepository
         this.buildLabelService = buildLabelService
+    }
+
+    Project trackProject(String projectName) {
+        projectRepository.findById(projectName).orElse(
+                projectRepository.save(new Project(id: projectName))
+        )
+    }
+
+    Branch trackBranchOf(String projectName, String branchName) {
+        Project project = projectRepository.findById(projectName).orElseThrow { -> new RuntimeException("No Project with id=${projectName}") }
+        Branch theBranch = branchRepository.findOne(ofProjectWithName(project, branchName)).orElse(
+                new Branch(
+                        project: project,
+                        name: branchName
+                )
+        )
+        if (!theBranch.id) {
+            theBranch = branchRepository.save(theBranch)
+            project.branches.add(theBranch)
+        }
+        theBranch
     }
 
     ProjectData dataForAllProjects(Boolean includeInactive = false) {
