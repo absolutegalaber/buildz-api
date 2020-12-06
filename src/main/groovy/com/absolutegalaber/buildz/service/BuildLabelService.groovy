@@ -14,6 +14,6 @@ class BuildLabelService {
     }
 
     Set<String> allKnownLabelKeys() {
-        buildLabelRepository.distinctLabelKeys();
+        buildLabelRepository.distinctLabelKeys()
     }
 }

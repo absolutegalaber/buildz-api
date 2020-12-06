@@ -119,4 +119,44 @@ class QuerySpecs {
             }
         }
     }
+
+    static Specification<Branch> ofProject(Project project, Boolean includeInactive) {
+        new Specification<Branch>() {
+            @Override
+            Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Predicate ofProject = criteriaBuilder.equal(root.get(Branch_.project), project)
+                if (includeInactive) {
+                    return ofProject
+                }
+                criteriaBuilder.and(
+                        ofProject,
+                        criteriaBuilder.equal(root.get(Branch_.active), true)
+                )
+            }
+        }
+    }
+
+    static Specification<Branch> ofProjectWithName(Project project, String branchName) {
+        new Specification<Branch>() {
+            @Override
+            Predicate toPredicate(Root<Branch> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(Branch_.project), project),
+                        criteriaBuilder.equal(root.get(Branch_.name), branchName)
+                )
+            }
+        }
+    }
+
+    static Specification<Project> allRelevantProjects(Boolean includeInactive) {
+        new Specification<Project>() {
+            @Override
+            Predicate toPredicate(Root<Project> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                if (includeInactive) {
+                    return criteriaBuilder.conjunction()
+                }
+                criteriaBuilder.equal(root.get(Project_.active), true)
+            }
+        }
+    }
 }

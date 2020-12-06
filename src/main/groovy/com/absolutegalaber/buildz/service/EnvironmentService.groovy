@@ -22,7 +22,7 @@ class EnvironmentService {
     }
 
     Optional<Environment> byName(String name) {
-        return environmentRepository.findOne(
+        environmentRepository.findOne(
                 environmentWithName(name)
         )
     }
@@ -34,7 +34,7 @@ class EnvironmentService {
         }
         Environment environment = new Environment()
         environment.setName(name)
-        return environmentRepository.save(environment)
+        environmentRepository.save(environment)
     }
 
     Environment save(Environment environment) throws InvalidRequestException {
@@ -61,7 +61,7 @@ class EnvironmentService {
             environment.artifacts.add(artifact)
             artifactRepository.save(artifact)
         })
-        return environment
+        environment
     }
 
     void delete(String name) {

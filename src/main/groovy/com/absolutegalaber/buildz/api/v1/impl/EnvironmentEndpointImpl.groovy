@@ -26,13 +26,13 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
 
     @Override
     Environment save(Environment environment) throws InvalidRequestException {
-        return environmentService.save(environment)
+        environmentService.save(environment)
     }
 
 
     @Override
     Environment get(String name) throws DataNotFoundException {
-        return environmentService.byName(name).orElseThrow({ -> new DataNotFoundException("No Environment found with name=${name}") })
+        environmentService.byName(name).orElseThrow({ -> new DataNotFoundException("No Environment found with name=${name}") })
     }
 
     @Override
@@ -42,7 +42,7 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
             Optional<Build> build = buildService.latestArtifact(artifact)
             build.ifPresent(toReturn.&add)
         })
-        return toReturn
+        toReturn
     }
 
     @Override

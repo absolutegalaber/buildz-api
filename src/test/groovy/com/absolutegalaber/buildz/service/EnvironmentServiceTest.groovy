@@ -28,8 +28,6 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         name      | expected | message
         'main'    | true     | 'ByName(): finds existing Environment by name'
         'missing' | false    | 'ByName(): is empty for non-existing environment name'
-
-
     }
 
     def "Create"() {

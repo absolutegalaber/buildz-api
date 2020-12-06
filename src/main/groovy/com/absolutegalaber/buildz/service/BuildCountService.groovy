@@ -11,7 +11,7 @@ import static com.absolutegalaber.buildz.repository.QuerySpecs.buildCountQuery
 @Service
 @Transactional
 class BuildCountService {
-    private final BuildCountRepository buildCountRepository;
+    private final BuildCountRepository buildCountRepository
 
     BuildCountService(BuildCountRepository buildCountRepository) {
         this.buildCountRepository = buildCountRepository
@@ -27,12 +27,12 @@ class BuildCountService {
                         )
                 )
 
-        theCount.increment();
-        buildCountRepository.save(theCount);
+        theCount.increment()
+        buildCountRepository.save(theCount)
     }
 
     BuildCount current(String project, String branch) {
-        return of(project, branch).orElse(
+        of(project, branch).orElse(
                 new BuildCount(
                         project: project,
                         branch: branch,
@@ -55,7 +55,7 @@ class BuildCountService {
     }
 
     private Optional<BuildCount> of(@NonNull String project, @NonNull String branch) {
-        return buildCountRepository.findOne(
+        buildCountRepository.findOne(
                 buildCountQuery(project, branch)
         )
     }
