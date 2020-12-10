@@ -5,6 +5,7 @@ import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.repository.ArtifactRepository
 import com.absolutegalaber.buildz.repository.EnvironmentRepository
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -66,5 +67,11 @@ class EnvironmentService {
 
     void delete(String name) {
         byName(name).ifPresent(environmentRepository.&delete)
+    }
+
+    List<String> allEnvironments() {
+        environmentRepository.findAll(
+                Sort.by('name')
+        ).collect { it.name }
     }
 }

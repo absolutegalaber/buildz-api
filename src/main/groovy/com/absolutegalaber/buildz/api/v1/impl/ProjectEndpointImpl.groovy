@@ -1,8 +1,9 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.v1.ProjectEndpoint
+import com.absolutegalaber.buildz.domain.ProjectBranchStatus
 import com.absolutegalaber.buildz.domain.ProjectData
-import com.absolutegalaber.buildz.domain.ProjectInfo
+import com.absolutegalaber.buildz.domain.ProjectBranch
 import com.absolutegalaber.buildz.domain.ProjectName
 import com.absolutegalaber.buildz.service.ProjectService
 import org.springframework.web.bind.annotation.RestController
@@ -24,12 +25,7 @@ class ProjectEndpointImpl implements ProjectEndpoint {
     }
 
     @Override
-    void toggleBranchActivation(ProjectInfo projectInfo) {
-        projectService.toggleBranchActive(projectInfo.project, projectInfo.branch)
-    }
-
-    @Override
-    void toggleProjectActivation(ProjectName projectName) {
-        projectService.toggleProjectActive(projectName.project)
+    void setProjectOrBranchActivation(ProjectBranchStatus projectBranchStatus) {
+        projectService.setProjectOrBranchActivation(projectBranchStatus.projectName, projectBranchStatus.branchName, projectBranchStatus.active)
     }
 }

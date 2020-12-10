@@ -101,4 +101,10 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         expect:
         service.delete('main')
     }
+
+    def "List"() {
+        expect:
+        !service.allEnvironments().isEmpty()
+    }
+
 }

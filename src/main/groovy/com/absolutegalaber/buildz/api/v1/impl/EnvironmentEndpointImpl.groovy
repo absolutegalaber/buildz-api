@@ -36,6 +36,11 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
     }
 
     @Override
+    List<String> list() throws DataNotFoundException {
+        environmentService.allEnvironments()
+    }
+
+    @Override
     EnvironmentBuilds verifyEnvironment(Set<Artifact> artifacts) {
         EnvironmentBuilds toReturn = new EnvironmentBuilds(environment: 'verification-result')
         artifacts.forEach({ artifact ->

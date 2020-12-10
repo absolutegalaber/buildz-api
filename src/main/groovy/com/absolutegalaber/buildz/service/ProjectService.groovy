@@ -1,8 +1,6 @@
 package com.absolutegalaber.buildz.service
 
-import com.absolutegalaber.buildz.domain.Branch
-import com.absolutegalaber.buildz.domain.Project
-import com.absolutegalaber.buildz.domain.ProjectData
+import com.absolutegalaber.buildz.domain.*
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.repository.BranchRepository
 import com.absolutegalaber.buildz.repository.ProjectRepository
@@ -50,7 +48,7 @@ class ProjectService {
                 Sort.by('id')
         )
         toReturn.projects.addAll(
-                allProjects.collect { it.id }
+                allProjects.collect { new ProjectStatus(name: it.id, active: it.active) }
         )
         //add all branches per projec
         allProjects.each { Project project ->
@@ -59,7 +57,7 @@ class ProjectService {
             )
             toReturn.projectBranches.put(
                     project.id,
-                    allBranchesProject.collect { it.name }
+                    allBranchesProject.collect { new BranchStatus(name: it.name, active: it.active) }
             )
         }
         //add all Label keys
@@ -69,17 +67,16 @@ class ProjectService {
         toReturn
     }
 
-    Branch toggleBranchActive(String projectName, String branchName) throws DataNotFoundException {
+    void setProjectOrBranchActivation(String projectName, String branchName, Boolean active) throws DataNotFoundException {
         Project theProject = projectRepository.findById(projectName).orElseThrow({ -> new DataNotFoundException("No project found for projectName=${projectName}") })
-        Branch theBranch = branchRepository.findOne(ofProjectWithName(theProject, branchName))
-                .orElseThrow({ -> new DataNotFoundException("No Branch found for branchName=${branchName}") })
-        theBranch.active = !theBranch.active
-        branchRepository.save(theBranch)
-    }
-
-    Project toggleProjectActive(String projectName) throws DataNotFoundException {
-        Project theProject = projectRepository.findById(projectName).orElseThrow({ -> new DataNotFoundException("No project found for projectName=${projectName}") })
-        theProject.active = !theProject.active
-        projectRepository.save(theProject)
+        if (branchName != null) {
+            Branch theBranch = branchRepository.findOne(ofProjectWithName(theProject, branchName))
+                    .orElseThrow({ -> new DataNotFoundException("No Branch found for branchName=${branchName}") })
+            theBranch.active
+            branchRepository.save(theBranch)
+        } else {
+            theProject.active = active
+            projectRepository.save(theProject)
+        }
     }
 }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Tag(name = "environments", description = "Provides Management of Environments.")
@@ -55,6 +56,24 @@ public interface EnvironmentEndpoint {
             )
             @RequestBody Environment environment
     ) throws InvalidRequestException;
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Environments Loaded",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/Environment")
+                    )
+            )
+    })
+    @Operation(
+            summary = "List all Environments",
+            description = "Returns all known Environments.",
+            tags = "environments"
+    )
+    @GetMapping("/api/v1/environments")
+    List<String> list() throws DataNotFoundException;
 
     @ApiResponses({
             @ApiResponse(

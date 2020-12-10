@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 )
 @ToString(includes = ['project', 'branch'])
 @EqualsAndHashCode(includes = ['project', 'branch'])
-class ProjectInfo implements Serializable {
+class ProjectBranch implements Serializable {
     @Schema(required = true)
     String project
 

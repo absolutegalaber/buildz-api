@@ -22,7 +22,6 @@ class StatsService {
 
     BuildStats stats() {
         new BuildStats(
-                environments: environmentRepository.distinctEnvironments() ,
                 numberOfBuilds: buildRepository.count(),
                 numberOfLabels: buildLabelRepository.count()
         )

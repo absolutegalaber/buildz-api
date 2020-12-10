@@ -1,8 +1,7 @@
 package com.absolutegalaber.buildz.api.v1;
 
+import com.absolutegalaber.buildz.domain.ProjectBranchStatus;
 import com.absolutegalaber.buildz.domain.ProjectData;
-import com.absolutegalaber.buildz.domain.ProjectInfo;
-import com.absolutegalaber.buildz.domain.ProjectName;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,30 +33,31 @@ public interface ProjectEndpoint {
     ProjectData getProjectData(@RequestParam(name = "include-inactive", required = false, defaultValue = "false") Boolean includeInactive);
 
     @Operation(
-            summary = "Toggle active status of a Branch",
-            description = "Toggle active status of a Branch",
+            summary = "Set Project or Branch active",
+            description = "Set active status of a Project or Branch",
             responses = {
                     @ApiResponse(
                             responseCode = "204",
-                            description = "Toggled"
+                            description = "Activation status set"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No Project and/or Branch founds",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/ExceptionInfo")
+                            )
                     )
             },
             tags = {"projects"}
     )
-    @PostMapping("/api/v1/projects/toggle-branch-active")
-    void toggleBranchActivation(@RequestBody ProjectInfo projectInfo);
-
-    @Operation(
-            summary = "Toggle active status of a Project",
-            description = "Toggle active status of a Project",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "204",
-                            description = "Toggled"
+    @PostMapping("/api/v1/projects/project-branch-activa")
+    void setProjectOrBranchActivation(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/ProjectBranchStatus")
                     )
-            },
-            tags = {"projects"}
-    )
-    @PostMapping("/api/v1/projects/toggle-project-active")
-    void toggleProjectActivation(@RequestBody ProjectName projectName);
+            )
+            @RequestBody ProjectBranchStatus projectBranch);
 }

@@ -1,7 +1,7 @@
 package com.absolutegalaber.buildz.api.v1;
 
 import com.absolutegalaber.buildz.domain.BuildCount;
-import com.absolutegalaber.buildz.domain.ProjectInfo;
+import com.absolutegalaber.buildz.domain.ProjectBranch;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +36,7 @@ public interface BuildNumberEndpoint {
                             schema = @Schema(ref = "#/components/schemas/ProjectInfo")
                     )
             )
-            @RequestBody ProjectInfo projectInfo
+            @RequestBody ProjectBranch projectBranch
     );
 
     @ApiResponses({

@@ -2,7 +2,7 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.v1.BuildNumberEndpoint
 import com.absolutegalaber.buildz.domain.BuildCount
-import com.absolutegalaber.buildz.domain.ProjectInfo
+import com.absolutegalaber.buildz.domain.ProjectBranch
 import com.absolutegalaber.buildz.service.BuildCountService
 import org.springframework.web.bind.annotation.RestController
 
@@ -18,7 +18,7 @@ class BuildNumberEndpointImpl implements BuildNumberEndpoint {
     }
 
     @Override
-    BuildCount next(ProjectInfo projectInfo) {
+    BuildCount next(ProjectBranch projectInfo) {
         return buildCountService.next(projectInfo.getProject(), projectInfo.getBranch())
     }
 

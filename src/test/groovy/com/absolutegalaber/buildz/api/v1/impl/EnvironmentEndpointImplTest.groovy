@@ -80,4 +80,18 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
         and:
         responseEntity.getBody().builds.size() == 1
     }
+
+    def "List all Envs"() {
+        given:
+        String LIST_URL = "http://localhost:${port}/api/v1/environments/"
+
+        when:
+        ResponseEntity<List<String>> responseEntity = restTemplate.getForEntity(LIST_URL, List)
+
+        then:
+        responseEntity.statusCode == HttpStatus.OK
+
+        and:
+        !responseEntity.body.isEmpty()
+    }
 }

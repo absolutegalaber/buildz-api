@@ -20,8 +20,5 @@ class StatsServiceTest extends BaseBuildzSpec {
 
         then:
         stats.numberOfBuilds > 0
-
-        and:
-        stats.environments.size() > 0
     }
 }

@@ -6,7 +6,7 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 @ToString
 class ProjectData implements Serializable {
-    List<String> projects = new ArrayList<>()
-    Map<String, List<String>> projectBranches = new HashMap<>()
+    List<ProjectStatus> projects = new ArrayList<>()
+    Map<String, List<BranchStatus>> projectBranches = new HashMap<>()
     List<String> labelKeys = new ArrayList<>()
 }

@@ -1,8 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.BaseBuildzSpec
-import com.absolutegalaber.buildz.domain.Branch
-import com.absolutegalaber.buildz.domain.Project
+import com.absolutegalaber.buildz.domain.BranchStatus
 import com.absolutegalaber.buildz.domain.ProjectData
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +42,7 @@ class ProjectServiceTest extends BaseBuildzSpec {
         dataForAllProjects.projectBranches.size() == 3
 
         and:
-        dataForAllProjects.projectBranches.every { Map.Entry<String, List<String>> entry ->
+        dataForAllProjects.projectBranches.every { Map.Entry<String, List<BranchStatus>> entry ->
             entry.value.size() == 3
         }
 
@@ -69,43 +68,31 @@ class ProjectServiceTest extends BaseBuildzSpec {
     }
 
 
+    @Unroll("setProjectOrBranchActivation(): #message")
     def "toggleProjectActive"() {
         when:
-        Project updated = service.toggleProjectActive('backend')
+        service.setProjectOrBranchActivation(projectName, branchName, active)
 
         then:
-        !updated.active
+        notThrown(Exception)
+        where:
+        projectName | branchName | active | message
+        'backend'   | 'main'     | false  | 'works for active branch'
+        'backend'   | null       | false  | 'works for active project'
     }
 
-    def "toggleProjectActive with wrong project"() {
+    @Unroll("setProjectOrBranchActivation() throws DataNotFOundExecption for wrong #type")
+    def "toggleProjectActive throwing Exception"() {
         when:
-        service.toggleProjectActive('missing')
+        service.setProjectOrBranchActivation(projectName, branchName, active)
 
         then:
         thrown(DataNotFoundException)
+        where:
+        projectName | branchName       | active | type
+        'wrongNAme' | 'main'           | false  | 'projectName'
+        'backend'   | 'no-such-branch' | false  | 'branchName'
     }
 
-    def "toggleProjectBranch"() {
-        when:
-        Branch updated = service.toggleBranchActive('backend', 'main')
 
-        then:
-        !updated.active
-    }
-
-    def "toggleProjectBranch with wrong project"() {
-        when:
-        service.toggleBranchActive('missing', 'main')
-
-        then:
-        thrown(DataNotFoundException)
-    }
-
-    def "toggleProjectBranch with wrong branch"() {
-        when:
-        service.toggleBranchActive('backend', 'missing')
-
-        then:
-        thrown(DataNotFoundException)
-    }
 }
