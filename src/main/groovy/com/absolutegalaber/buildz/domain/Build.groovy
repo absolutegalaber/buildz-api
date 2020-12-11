@@ -32,5 +32,5 @@ class Build implements Serializable {
     Long buildNumber
 
     @OneToMany(mappedBy = "build", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    Set<BuildLabel> labels = []
+    Set<BuildLabel> labels = new TreeSet<>()
 }

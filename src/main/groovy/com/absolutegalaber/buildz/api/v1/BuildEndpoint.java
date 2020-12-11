@@ -112,16 +112,23 @@ public interface BuildEndpoint {
                             mediaType = "application/json",
                             schema = @Schema(ref = "#/components/schemas/EnvironmentBuilds")
                     )
+            ), @ApiResponse(
+            responseCode = "404",
+            description = "Builds Loaded.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(ref = "#/components/schemas/ExceptionInfo")
             )
+    )
     })
     @Operation(
             summary = "Builds of an Environment.",
-            description = "All Build of an Env.",
+            description = "All Build of an Environment.",
             tags = {"builds"}
     )
     @GetMapping("/api/v1/builds/of-environment/{name}")
     EnvironmentBuilds environment(
-            @Parameter(name = "name", description = "Name of the Environment to check ")
+            @Parameter(name = "name", description = "Name of the Environment to search Builds for. ")
             @PathVariable(name = "name") String name
-    ) throws InvalidRequestException;
+    ) throws DataNotFoundException;
 }

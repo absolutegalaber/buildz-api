@@ -47,7 +47,7 @@ class BuildEndpointImpl implements BuildEndpoint {
     }
 
     @Override
-    EnvironmentBuilds environment(String name) throws InvalidRequestException {
+    EnvironmentBuilds environment(String name) throws DataNotFoundException {
         buildService.ofEnvironment(name)
     }
 }

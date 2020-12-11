@@ -1,6 +1,8 @@
 package com.absolutegalaber.buildz.service
 
+import com.absolutegalaber.buildz.BaseBuildzSpec
 import com.absolutegalaber.buildz.domain.*
+import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Subject
@@ -9,7 +11,7 @@ import spock.lang.Unroll
 /**
  * Created by Josip.Mihelko @ Gmail
  */
-class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
+class BuildServiceTest extends BaseBuildzSpec {
     @Subject
     @Autowired
     BuildService service
@@ -58,7 +60,7 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
         service.addLabels(-1L, [label])
 
         then:
-        thrown(InvalidRequestException)
+        thrown(DataNotFoundException)
     }
 
     @Unroll("#message")
@@ -153,6 +155,6 @@ class BuildServiceTest extends com.absolutegalaber.buildz.BaseBuildzSpec {
         service.ofEnvironment('no-such-env')
 
         then:
-        thrown(InvalidRequestException)
+        thrown(DataNotFoundException)
     }
 }

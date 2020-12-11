@@ -7,7 +7,7 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = ['environment', 'builds'])
 class EnvironmentBuilds implements Serializable {
     String environment
-    Map<String, Build> builds = [:]
+    Map<String, Build> builds = new TreeMap<String, Build>()
 
     void add(Build build) {
         builds.put(build.getProject(), build)

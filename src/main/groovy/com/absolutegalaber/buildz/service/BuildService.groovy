@@ -1,7 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.domain.*
-import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
+import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.repository.BuildLabelRepository
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.EnvironmentRepository
@@ -40,10 +40,9 @@ class BuildService {
         return buildRepository.save(build)
     }
 
-    Build addLabels(Long buildId, List<BuildLabel> labels) throws InvalidRequestException {
+    Build addLabels(Long buildId, List<BuildLabel> labels) throws DataNotFoundException {
         Build build = byId(buildId).orElseThrow({ ->
-            //TODO: Umbau: Exception im Endpoint werfenn
-            new InvalidRequestException("No Build found for buildId='${buildId}'")
+            new DataNotFoundException("No Build found for buildId='${buildId}'")
         })
         labels.forEach({ buildLabel ->
             build.getLabels().add(new BuildLabel(
@@ -122,11 +121,10 @@ class BuildService {
         toReturn
     }
 
-    EnvironmentBuilds ofEnvironment(String environmentName) throws InvalidRequestException {
+    EnvironmentBuilds ofEnvironment(String environmentName) throws DataNotFoundException {
         Optional<Environment> environment = environmentRepository.findOne(environmentWithName(environmentName))
         if (environment.isEmpty()) {
-            //TODO: Umbau: Exception im Endpoint werfenn
-            throw new InvalidRequestException("No Environment found with name='${environmentName}'")
+            throw new DataNotFoundException("No Environment found with name='${environmentName}'")
         }
         Environment theEnv = environment.get()
         EnvironmentBuilds toReturn = new EnvironmentBuilds(

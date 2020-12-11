@@ -1,5 +1,6 @@
 package com.absolutegalaber.buildz.domain
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -15,7 +16,7 @@ import javax.persistence.*
 )
 @ToString(includes = ['id', 'key', 'value'])
 @EqualsAndHashCode(includes = ['id', 'key', 'value'])
-class BuildLabel implements Serializable {
+class BuildLabel implements Serializable, Comparable<BuildLabel> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
@@ -32,4 +33,9 @@ class BuildLabel implements Serializable {
     @Basic(optional = false)
     @Column(name = 'label_value', nullable = false)
     String value
+
+    @Override
+    int compareTo(BuildLabel o) {
+        return getKey() <=> o.getKey()
+    }
 }
