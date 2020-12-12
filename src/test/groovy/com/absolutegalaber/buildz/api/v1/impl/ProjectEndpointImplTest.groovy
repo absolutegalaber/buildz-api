@@ -37,7 +37,7 @@ class ProjectEndpointImplTest extends BaseRestSpec {
 
     def "Set Project/Branch Activation"() {
         given:
-        String ACTIVATION_PROJECT_URL = "http://localhost:${port}/api/v1/projects/project-branch-activa"
+        String ACTIVATION_PROJECT_URL = "http://localhost:${port}/api/v1/projects/project-branch-active"
         ProjectBranchStatus status = new ProjectBranchStatus(
                 projectName: 'abandoned',
                 branchName: 'main',

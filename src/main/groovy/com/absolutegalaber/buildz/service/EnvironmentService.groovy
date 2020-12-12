@@ -31,7 +31,7 @@ class EnvironmentService {
     Environment create(String name) throws InvalidRequestException {
         //check name to avoid unique value constraint failure from db.
         if (byName(name).isPresent()) {
-            throw new InvalidRequestException("Environment with name=" + name + "already present")
+            throw new InvalidRequestException("Environment with name='" + name + "' already exists")
         }
         Environment environment = new Environment()
         environment.setName(name)
@@ -53,7 +53,7 @@ class EnvironmentService {
         } else {
             //an insert -> check uniqueness of name
             if (byName(environment.getName()).isPresent()) {
-                throw new InvalidRequestException("Environment with name=" + environment.getName() + "already present")
+                throw new InvalidRequestException("Environment with name='" + environment.getName() + "' already exists")
             }
             environment = create(environment.getName())
         }

@@ -10,7 +10,7 @@ import javax.persistence.*
 @Table(name = 'artifact')
 @ToString(includes = ['id', 'project', 'branch', 'labels'])
 @EqualsAndHashCode(includes = ['id', 'project', 'branch', 'labels'])
-class Artifact implements Serializable {
+class Artifact implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
@@ -30,5 +30,5 @@ class Artifact implements Serializable {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = 'artifact_labels', joinColumns = @JoinColumn(name = 'artifact_id'))
-    Map<String, String> labels = [:]
+    Map<String, String> labels = new TreeMap<>()
 }

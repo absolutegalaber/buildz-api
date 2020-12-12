@@ -72,7 +72,7 @@ class ProjectService {
         if (branchName != null) {
             Branch theBranch = branchRepository.findOne(ofProjectWithName(theProject, branchName))
                     .orElseThrow({ -> new DataNotFoundException("No Branch found for branchName=${branchName}") })
-            theBranch.active
+            theBranch.active = active
             branchRepository.save(theBranch)
         } else {
             theProject.active = active

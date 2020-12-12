@@ -51,7 +51,7 @@ public interface ProjectEndpoint {
             },
             tags = {"projects"}
     )
-    @PostMapping("/api/v1/projects/project-branch-activa")
+    @PostMapping("/api/v1/projects/project-branch-active")
     void setProjectOrBranchActivation(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
