@@ -30,7 +30,7 @@ create table `deploy_label`
     `deploy_id`     bigint(20)      not null,
     primary key     (`id`),
     key `fk_deploy` (`deploy_id`),
-    constraint `fk_label_deploy` foreign key (`deploy_id`) references `deploy` (`id`)
+    constraint `fk_label_deploy` foreign key (`deploy_id`) references `deploy` (`id`) on delete cascade
     )
     engine = innodb
     default charset = utf8;

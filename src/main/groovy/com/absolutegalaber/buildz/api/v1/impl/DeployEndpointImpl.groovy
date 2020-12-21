@@ -38,13 +38,15 @@ class DeployEndpointImpl implements DeployEndpoint {
 
     @Override
     DeployView register(RegisterDeployEvent event) throws InvalidRequestException {
-        DeployView toReturn = deployService.register(event)
-
-        toReturn
+        deployService.register(event)
     }
 
     @Override
     DeployView addLabels(Long deployId, List<DeployLabel> deployLabels) throws InvalidRequestException {
-        deployService.addLabels(deployId, deployLabels)
+        Map<String, String> labels = [:]
+        deployLabels.each {
+            labels.&put(it.key, it.value)
+        }
+        deployService.addLabels(deployId, labels)
     }
 }

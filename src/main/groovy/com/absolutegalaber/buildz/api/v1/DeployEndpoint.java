@@ -128,7 +128,7 @@ public interface DeployEndpoint {
             summary = "Register a new Deploy",
             description = "Registers a new Deploy of a Build to a Server.",
             tags = {"deploys"})
-    @PostMapping("/api/v1/deploy/create")
+    @PostMapping("/api/v1/deploys/create")
     DeployView register(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     ref = "#/components/schemas/Deploy",
