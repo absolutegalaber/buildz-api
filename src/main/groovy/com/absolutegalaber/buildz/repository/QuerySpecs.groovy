@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Join
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
@@ -156,6 +157,82 @@ class QuerySpecs {
                     return criteriaBuilder.conjunction()
                 }
                 criteriaBuilder.equal(root.get(Project_.active), true)
+            }
+        }
+    }
+
+    /**
+     * Generates a way to search the database for a specific Server based on
+     * the name of said Server
+     *
+     * @param name  the name of the Server
+     * @return      the Server with the provided name
+     */
+    static Specification<Server> serverWithName(String name) {
+        new Specification<Server>() {
+            @Override
+            Predicate toPredicate(Root<Server> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.equal(root.get(Server_.name), name)
+            }
+        }
+    }
+
+    /**
+     * Generates a way to search the database for a List of Deploys based on the Server to which the Deploys are
+     * registered
+     *
+     * @param serverName    a name of a Server
+     * @return              the Deploys deployed on the Server
+     */
+    // TODO Update to return DeployView
+    static Specification<Deploy> deploysOnServer(Server server) {
+        new Specification<Deploy>() {
+            @Override
+            Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.equal(root.get(Deploy_.server), server)
+            }
+        }
+    }
+
+    /**
+     * Generates a way to search the database for a specific Deploy based on
+     * the id of said Deploy
+     * @param id    the ID of the Deploy
+     * @return      the Deploy with the provided ID
+     */
+    // TODO Update to return DeployView
+    static Specification<Deploy> deployWithId(long id) {
+        new Specification<Deploy>() {
+            @Override
+            Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.equal(root.get(Deploy_.id), id)
+            }
+        }
+    }
+
+    /**
+     * Generates a way to search the database for a specific Build based on
+     * the project, branch, and build number of that Build
+     *
+     * @param project       the project of the requested Build
+     * @param branch        the branch of the requested Build
+     * @param buildNumber   the buildNumber of the requested Build
+     * @return              the Build with the provided project, branch, and
+     *                      buildNumber
+     */
+    static Specification<Build> buildWithProjectBranchAndNumber(
+            String project,
+            String branch,
+            Long buildNumber
+    ) {
+        new Specification<Build>() {
+            @Override
+            Predicate toPredicate(Root<Build> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(Build_.project), project),
+                        criteriaBuilder.equal(root.get(Build_.branch), branch),
+                        criteriaBuilder.equal(root.get(Build_.buildNumber), buildNumber)
+                )
             }
         }
     }

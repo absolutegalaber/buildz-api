@@ -8,4 +8,5 @@ import groovy.transform.ToString
 class BuildStats implements Serializable {
     Long numberOfBuilds
     Long numberOfLabels
+    Long numberOfDeploys
 }
