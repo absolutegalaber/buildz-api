@@ -1,6 +1,12 @@
 # noinspection SqlWithoutWhereForFile
 
 delete
+from deploy_label;
+delete
+from deploy;
+delete
+from server;
+delete
 from artifact_labels;
 delete
 from artifact;
@@ -426,3 +432,11 @@ VALUES ('main', 'backend', 1),
        ('merged-feature-backoffice', 'backoffice', 0),
        ('main', 'abandoned', 1),
        ('merged', 'abandoned', 0);
+
+INSERT INTO server(id, name)
+VALUES (1, 'Test Server 1'),
+       (2, 'Empty Server');
+
+INSERT INTO deploy(id, deployed_at, build_id, server_id)
+VALUES (1, NOW(), 1, 1),
+       (2, NOW(), 2, 1);
