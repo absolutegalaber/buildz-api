@@ -24,7 +24,7 @@ class DeployLabel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
-    @ManyToOne(targetEntity = Build, optional = false)
+    @ManyToOne(targetEntity = Deploy, optional = false)
     @JoinColumn(name = 'deploy_id', nullable = false, foreignKey = @ForeignKey(name = 'fk_deploy', value = ConstraintMode.CONSTRAINT))
     @JsonBackReference
     Deploy deploy

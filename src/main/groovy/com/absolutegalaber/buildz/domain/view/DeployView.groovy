@@ -19,7 +19,7 @@ class DeployView {
     DeployView(Deploy deploy) {
         id = deploy.getId()
         deployedAt = deploy.getDeployedAt()
-        build = new DeployView.DeployBuildView(
+        build = new DeployBuildView(
                 project: deploy.getBuild().getProject(),
                 branch: deploy.getBuild().getBranch(),
                 buildNumber: deploy.getBuild().getBuildNumber()
