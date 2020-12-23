@@ -19,4 +19,7 @@ class RegisterDeployEvent {
 
     // This string:string map will be used to generate the DeployLabels
     Map<String,String> labels = [:]
+
+    String reservedBy;
+    String reservationNote;
 }

@@ -7,11 +7,13 @@ import groovy.transform.EqualsAndHashCode
 class IServer implements Serializable {
     Long id
     String name
+    IReservation reservation
 
     static IServer of(Server server) {
         new IServer(
                 id: server.id,
-                name: server.name
+                name: server.name,
+                reservation: IReservation.by(server.reservation)
         )
     }
 }

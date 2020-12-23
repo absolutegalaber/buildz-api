@@ -34,4 +34,16 @@ class Server implements Serializable {
 
     @Basic(optional = false)
     String name
+
+    @Embedded
+    Reservation reservation
+
+    @Embeddable
+    static class Reservation implements Serializable {
+        @Column(name = "reserved_by")
+        String by
+
+        @Column(name = "reservation_note")
+        String note
+    }
 }
