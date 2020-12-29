@@ -1,5 +1,7 @@
 package com.absolutegalaber.buildz.service
 
+import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
@@ -28,41 +30,45 @@ class EnvironmentService {
         )
     }
 
-    Environment create(String name) throws InvalidRequestException {
-        //check name to avoid unique value constraint failure from db.
-        if (byName(name).isPresent()) {
-            throw new InvalidRequestException("Environment with name='" + name + "' already exists")
+    Environment save(IEnvironment toSave) throws InvalidRequestException {
+        Environment theEnvironment
+        if (toSave.getId() != null) {
+            theEnvironment = update(toSave)
+        } else {
+            theEnvironment = insert(toSave)
         }
-        Environment environment = new Environment()
-        environment.setName(name)
-        environmentRepository.save(environment)
+        toSave.getArtifacts().each { IArtifact artifact ->
+            Artifact newArtifact = new Artifact(
+                    project: artifact.project,
+                    branch: artifact.branch,
+                    environment: theEnvironment
+            )
+            newArtifact.labels = artifact.labels
+            newArtifact.environment = theEnvironment
+            theEnvironment.artifacts.add(newArtifact)
+            artifactRepository.save(newArtifact)
+        }
+        theEnvironment
     }
 
-    Environment save(Environment environment) throws InvalidRequestException {
-        //TODO: Make this sexier
-        Set<Artifact> theArtifacts = environment.getArtifacts()
-        if (environment.getId() != null) {
-            //an update ==> we don't mess around here and clean the depending side environment.artifact
-            //obviously this could be handled better...
-            Environment current = environmentRepository.findById(environment.getId()).get()
-            current.name = environment.name
-            current.artifacts.forEach({ Artifact artifact ->
-                artifactRepository.delete(artifact)
-            })
-            current.getArtifacts().clear()
-        } else {
-            //an insert -> check uniqueness of name
-            if (byName(environment.getName()).isPresent()) {
-                throw new InvalidRequestException("Environment with name='" + environment.getName() + "' already exists")
-            }
-            environment = create(environment.getName())
-        }
-        theArtifacts.forEach({ Artifact artifact ->
-            artifact.setEnvironment(environment)
-            environment.artifacts.add(artifact)
-            artifactRepository.save(artifact)
+    Environment update(IEnvironment toUpdate) throws InvalidRequestException {
+        Environment theEnvironment = environmentRepository.findById(toUpdate.id)
+                .orElseThrow({ -> new InvalidRequestException("Environment with id='${toUpdate.id}' not found") })
+        theEnvironment.name = toUpdate.name
+        theEnvironment.artifacts.forEach({ Artifact artifact ->
+            artifactRepository.delete(artifact)
         })
-        environment
+        theEnvironment.getArtifacts().clear()
+        theEnvironment
+    }
+
+    Environment insert(IEnvironment toInsert) throws InvalidRequestException {
+        if (byName(toInsert.getName()).isPresent()) {
+            throw new InvalidRequestException("Environment with name='" + toInsert.getName() + "' already exists")
+        }
+        Environment theEnvironment = new Environment()
+        theEnvironment.setName(toInsert.name)
+        environmentRepository.save(theEnvironment)
     }
 
     void delete(String name) {

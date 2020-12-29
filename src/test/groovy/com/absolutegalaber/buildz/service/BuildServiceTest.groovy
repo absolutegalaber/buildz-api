@@ -3,7 +3,6 @@ package com.absolutegalaber.buildz.service
 import com.absolutegalaber.buildz.BaseBuildzSpec
 import com.absolutegalaber.buildz.domain.*
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
-import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -38,12 +37,11 @@ class BuildServiceTest extends BaseBuildzSpec {
 
     def "AddLabels"() {
         given:
-        BuildLabel label = new BuildLabel()
-        label.setKey('newKey')
-        label.setValue('newValue')
+        Map<String, String> labels = [:]
+        labels.put('newKey', 'newValue')
 
         when:
-        Build theBuild = service.addLabels(1L, [label])
+        Build theBuild = service.addLabels(1L, labels)
 
         then:
         theBuild.labels.size() == 4
@@ -52,12 +50,11 @@ class BuildServiceTest extends BaseBuildzSpec {
 
     def "AddLabels with wrong build id"() {
         given:
-        BuildLabel label = new BuildLabel()
-        label.setKey('newKey')
-        label.setValue('newValue')
+        Map<String, String> labels = [:]
+        labels.put('newKey', 'newValue')
 
         when:
-        service.addLabels(-1L, [label])
+        service.addLabels(-1L, labels)
 
         then:
         thrown(DataNotFoundException)
@@ -105,7 +102,7 @@ class BuildServiceTest extends BaseBuildzSpec {
         'backend'  | null      | null               | null           | 30       | null              | null              | "Search(): finds all builds of project 'backend'"
         'backend'  | 'main'    | null               | null           | 10       | null              | null              | "Search(): finds all builds of project 'backend' of branch 'master"
         'backend'  | 'main'    | 'integration-test' | 'ok'           | 5        | null              | null              | "Search(): finds all builds of projects with label technical_branch=feature/some-other-feature"
-        null       | null      | 'technical_branch' | 'noSuchBranch' | 0        | null              | null              | "Search(): is empty for empty lbel sub-search"
+        null       | null      | 'technical_branch' | 'noSuchBranch' | 0        | null              | null              | "Search(): is empty for empty label sub-search"
     }
 
     @Unroll("#message")

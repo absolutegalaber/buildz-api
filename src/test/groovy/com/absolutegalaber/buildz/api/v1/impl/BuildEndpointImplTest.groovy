@@ -1,11 +1,14 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
-import com.absolutegalaber.buildz.domain.*
+import com.absolutegalaber.buildz.api.model.IBuild
+import com.absolutegalaber.buildz.domain.BuildSearch
+import com.absolutegalaber.buildz.domain.BuildSearchResult
+import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class BuildEndpointTest extends BaseRestSpec {
+class BuildEndpointImplTest extends BaseRestSpec {
     def "Search"() {
         given:
         String SEARCH_URL = "http://localhost:${port}/api/v1/builds/search"
@@ -49,7 +52,7 @@ class BuildEndpointTest extends BaseRestSpec {
         String GET_URL = "http://localhost:${port}/api/v1/builds/${buildId}"
 
         when:
-        ResponseEntity<Build> responseEntity = restTemplate.getForEntity(GET_URL, Build)
+        ResponseEntity<IBuild> responseEntity = restTemplate.getForEntity(GET_URL, IBuild)
 
         then:
         responseEntity.statusCode == HttpStatus.OK
@@ -64,7 +67,7 @@ class BuildEndpointTest extends BaseRestSpec {
         String GET_URL = "http://localhost:${port}/api/v1/builds/${buildId}"
 
         when:
-        ResponseEntity<Build> responseEntity = restTemplate.getForEntity(GET_URL, Build)
+        ResponseEntity<IBuild> responseEntity = restTemplate.getForEntity(GET_URL, IBuild)
 
         then:
         responseEntity.statusCode == HttpStatus.NOT_FOUND
@@ -73,14 +76,14 @@ class BuildEndpointTest extends BaseRestSpec {
     def "Create"() {
         given:
         String CREATE_URL = "http://localhost:${port}/api/v1/builds/create"
-        Build build = new Build(
+        IBuild build = new IBuild(
                 project: 'backend',
                 branch: 'hotfix',
                 buildNumber: 1
         )
 
         when:
-        ResponseEntity<Build> responseEntity = restTemplate.postForEntity(CREATE_URL, build, Build)
+        ResponseEntity<IBuild> responseEntity = restTemplate.postForEntity(CREATE_URL, build, IBuild)
 
         then:
         responseEntity.statusCode == HttpStatus.OK
@@ -93,12 +96,12 @@ class BuildEndpointTest extends BaseRestSpec {
         given:
         Long buildId = 1
         String ADD_LABEL_URL = "http://localhost:${port}/api/v1/builds/add-labels/${buildId}"
-        List<BuildLabel> newLabels = [
-                new BuildLabel(key: 'crazy-key', value: 'crazy-value')
+        Map<String, String> newLabels = [
+                'crazy-key': 'crazy-value'
         ]
 
         when:
-        ResponseEntity<Build> responseEntity = restTemplate.postForEntity(ADD_LABEL_URL, newLabels, Build)
+        ResponseEntity<IBuild> responseEntity = restTemplate.postForEntity(ADD_LABEL_URL, newLabels, IBuild)
 
         then:
         responseEntity.statusCode == HttpStatus.OK

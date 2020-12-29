@@ -1,8 +1,8 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
-import com.absolutegalaber.buildz.domain.Artifact
-import com.absolutegalaber.buildz.domain.Environment
+import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import com.absolutegalaber.buildz.domain.ExceptionInfo
 import org.springframework.http.HttpStatus
@@ -14,10 +14,10 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
         String newEnvName = 'new-crazy-env'
         String CREATE_URL = "http://localhost:${port}/api/v1/environments"
         String DELETE_URL = "http://localhost:${port}/api/v1/environments/${newEnvName}"
-        Environment newEnvironment = new Environment(
+        IEnvironment newEnvironment = new IEnvironment(
                 name: newEnvName,
                 artifacts: [
-                        new Artifact(
+                        new IArtifact(
                                 project: 'backend',
                                 branch: 'main'
                         )
@@ -25,7 +25,7 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
         )
 
         when:
-        ResponseEntity<Environment> created = restTemplate.postForEntity(CREATE_URL, newEnvironment, Environment)
+        ResponseEntity<IEnvironment> created = restTemplate.postForEntity(CREATE_URL, newEnvironment, IEnvironment)
         restTemplate.delete(DELETE_URL)
 
         then:
@@ -39,7 +39,7 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
         String GET_URL = "http://localhost:${port}/api/v1/environments/${envName}"
 
         when:
-        ResponseEntity<Environment> responseEntity = restTemplate.getForEntity(GET_URL, Environment)
+        ResponseEntity<IEnvironment> responseEntity = restTemplate.getForEntity(GET_URL, IEnvironment)
 
         then:
         responseEntity.statusCode == HttpStatus.OK
@@ -66,7 +66,7 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
     def "VerifyEnvironment with 1 articfact"() {
         given:
         String VERIFY_URL = "http://localhost:${port}/api/v1/environments/verify-artifacts"
-        Artifact artifact = new Artifact(
+        IArtifact artifact = new IArtifact(
                 project: 'backend',
                 branch: 'main',
                 labels: ['integration-test': 'ok']
@@ -86,7 +86,7 @@ class EnvironmentEndpointImplTest extends BaseRestSpec {
         String LIST_URL = "http://localhost:${port}/api/v1/environments/"
 
         when:
-        ResponseEntity<List<String>> responseEntity = restTemplate.getForEntity(LIST_URL, List)
+        ResponseEntity<List> responseEntity = restTemplate.getForEntity(LIST_URL, List)
 
         then:
         responseEntity.statusCode == HttpStatus.OK

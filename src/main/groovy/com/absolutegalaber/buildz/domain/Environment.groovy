@@ -23,5 +23,5 @@ class Environment implements Serializable {
     String name
 
     @OneToMany(mappedBy = 'environment', cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    Set<Artifact> artifacts = []
+    List<Artifact> artifacts = []
 }

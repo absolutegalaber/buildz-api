@@ -1,7 +1,7 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
-import com.absolutegalaber.buildz.domain.Server
+import com.absolutegalaber.buildz.api.model.IServer
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -12,7 +12,7 @@ class ServerEndpointImplTest extends BaseRestSpec {
         String GET_SERVER_URKL = "http://localhost:${port}/api/v1/servers/${serverName}"
 
         when:
-        ResponseEntity<Server> response = restTemplate.getForEntity(GET_SERVER_URKL, Server)
+        ResponseEntity<IServer> response = restTemplate.getForEntity(GET_SERVER_URKL, IServer)
 
         then:
         response.statusCode == HttpStatus.OK
@@ -26,7 +26,7 @@ class ServerEndpointImplTest extends BaseRestSpec {
         String GET_SERVER_URKL = "http://localhost:${port}/api/v1/servers/NoSuchServer"
 
         when:
-        ResponseEntity<Server> response = restTemplate.getForEntity(GET_SERVER_URKL, Server)
+        ResponseEntity<IServer> response = restTemplate.getForEntity(GET_SERVER_URKL, IServer)
 
         then:
         response.statusCode == HttpStatus.NOT_FOUND

@@ -1,5 +1,6 @@
 package com.absolutegalaber.buildz.domain
 
+import com.absolutegalaber.buildz.api.model.IBuild
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
@@ -7,9 +8,9 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = ['environment', 'builds'])
 class EnvironmentBuilds implements Serializable {
     String environment
-    Map<String, Build> builds = new TreeMap<String, Build>()
+    Map<String, IBuild> builds = new TreeMap<String, IBuild>()
 
     void add(Build build) {
-        builds.put(build.getProject(), build)
+        builds.put(build.getProject(), IBuild.of(build))
     }
 }
