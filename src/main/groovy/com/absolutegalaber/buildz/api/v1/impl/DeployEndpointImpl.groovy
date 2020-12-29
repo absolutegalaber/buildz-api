@@ -1,10 +1,9 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.api.v1.DeployEndpoint
-import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
-import com.absolutegalaber.buildz.domain.view.DeployView
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import com.absolutegalaber.buildz.service.DeployService
 import com.absolutegalaber.buildz.service.ServerService
@@ -27,26 +26,28 @@ class DeployEndpointImpl implements DeployEndpoint {
     }
 
     @Override
-    List<DeployView> list(String serverName) throws DataNotFoundException {
-        deployService.byServer(serverName)
+    List<IDeploy> list(String serverName) throws DataNotFoundException {
+        deployService.byServer(serverName).collect { IDeploy.of(it) }
     }
 
     @Override
-    DeployView get(Long deployId) throws DataNotFoundException {
-        deployService.byId(deployId)
+    IDeploy get(Long deployId) throws DataNotFoundException {
+        IDeploy.of(
+                deployService.byId(deployId)
+        )
     }
 
     @Override
-    DeployView register(RegisterDeployEvent event) throws InvalidRequestException {
-        deployService.register(event)
+    IDeploy register(RegisterDeployEvent event) throws InvalidRequestException {
+        IDeploy.of(
+                deployService.register(event)
+        )
     }
 
     @Override
-    DeployView addLabels(Long deployId, List<DeployLabel> deployLabels) throws InvalidRequestException {
-        Map<String, String> labels = [:]
-        deployLabels.each {
-            labels.&put(it.key, it.value)
-        }
-        deployService.addLabels(deployId, labels)
+    IDeploy addLabels(Long deployId, Map<String, String> deployLabels) throws InvalidRequestException {
+        IDeploy.of(
+                deployService.addLabels(deployId, deployLabels)
+        )
     }
 }

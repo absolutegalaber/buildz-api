@@ -1,8 +1,7 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
-import com.absolutegalaber.buildz.domain.DeployLabel
-import com.absolutegalaber.buildz.domain.view.DeployView
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -29,7 +28,7 @@ class DeployEndpointImplTest extends BaseRestSpec {
         String GET_URL = "http://localhost:${port}/api/v1/deploys/${deployId}"
 
         when:
-        ResponseEntity<DeployView> response = restTemplate.getForEntity(GET_URL, DeployView)
+        ResponseEntity<IDeploy> response = restTemplate.getForEntity(GET_URL, IDeploy)
 
         then:
         response.statusCode == HttpStatus.OK
@@ -49,7 +48,7 @@ class DeployEndpointImplTest extends BaseRestSpec {
                 labels: ['type': 'hotfix']
         )
         when:
-        ResponseEntity<DeployView> response = restTemplate.postForEntity(REGISTER_URL, body, DeployView)
+        ResponseEntity<IDeploy> response = restTemplate.postForEntity(REGISTER_URL, body, IDeploy)
 
         then:
         response.statusCode == HttpStatus.OK
@@ -70,7 +69,7 @@ class DeployEndpointImplTest extends BaseRestSpec {
                 labels: ['type': 'hotfix']
         )
         when:
-        ResponseEntity<DeployView> response = restTemplate.postForEntity(REGISTER_URL, body, DeployView)
+        ResponseEntity<IDeploy> response = restTemplate.postForEntity(REGISTER_URL, body, IDeploy)
 
         then:
         response.statusCode == HttpStatus.NOT_FOUND
@@ -80,19 +79,13 @@ class DeployEndpointImplTest extends BaseRestSpec {
         given:
         Long deployId = 1
         String ADD_LABEL_URL = "http://localhost:${port}/api/v1/deploys/add-labels/${deployId}"
-        List<DeployLabel> labelList = [
-                new DeployLabel(
-                        key: 'user',
-                        value: 'admin'
-                ),
-                new DeployLabel(
-                        key: 'reason',
-                        value: 'for_fun'
-                )
+        Map<String, String> labels = [
+                'user'  : 'admin',
+                'reason': 'for_fun'
         ]
 
         when:
-        ResponseEntity<DeployView> response = restTemplate.postForEntity(ADD_LABEL_URL, labelList, DeployView)
+        ResponseEntity<IDeploy> response = restTemplate.postForEntity(ADD_LABEL_URL, labels, IDeploy)
 
         then:
         response.statusCode == HttpStatus.OK

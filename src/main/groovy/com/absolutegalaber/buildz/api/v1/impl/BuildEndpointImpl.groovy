@@ -1,11 +1,15 @@
 package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.v1.BuildEndpoint
-import com.absolutegalaber.buildz.domain.*
+import com.absolutegalaber.buildz.domain.Build
+import com.absolutegalaber.buildz.domain.BuildSearch
+import com.absolutegalaber.buildz.domain.BuildSearchResult
+import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.service.BuildService
 import com.absolutegalaber.buildz.service.ProjectService
+import com.absolutegalaber.buildz.api.model.IBuild
 import org.springframework.web.bind.annotation.RestController
 
 import javax.transaction.Transactional
@@ -27,23 +31,29 @@ class BuildEndpointImpl implements BuildEndpoint {
     }
 
     @Override
-    Build get(Long buildId) throws DataNotFoundException {
-        Optional<Build> build = buildService.byId(buildId)
-        build.orElseThrow(
+    IBuild get(Long buildId) throws DataNotFoundException {
+        Build build = buildService.byId(buildId).orElseThrow(
                 { -> new DataNotFoundException("No Build found for buildId=" + buildId) }
+        )
+        IBuild.of(
+                build
         )
     }
 
     @Override
-    Build create(Build build) {
+    IBuild create(IBuild build) {
         Build toReturn = buildService.create(build.getProject(), build.getBranch(), build.getBuildNumber())
         projectService.trackProjectAndBranch(build.getProject(), build.getBranch())
-        toReturn
+        IBuild.of(
+                toReturn
+        )
     }
 
     @Override
-    Build addLabels(Long buildId, List<BuildLabel> buildLabels) throws InvalidRequestException {
-        buildService.addLabels(buildId, buildLabels)
+    IBuild addLabels(Long buildId, Map<String, String> labels) throws InvalidRequestException {
+        IBuild.of(
+                buildService.addLabels(buildId, labels)
+        )
     }
 
     @Override

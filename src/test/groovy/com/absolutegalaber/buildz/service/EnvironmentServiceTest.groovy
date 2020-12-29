@@ -1,7 +1,8 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.BaseBuildzSpec
-import com.absolutegalaber.buildz.domain.Artifact
+import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,28 +31,15 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         'missing' | false    | 'ByName(): is empty for non-existing environment name'
     }
 
-    def "Create"() {
-        expect:
-        service.create("new-environment").id
-    }
-
-    def "Create with duplicate name"() {
-        when:
-        service.create("main")
-
-        then:
-        thrown(InvalidRequestException)
-    }
-
     def "Save inserting new instance"() {
         given:
-        Environment environment = new Environment()
+        IEnvironment environment = new IEnvironment()
         environment.setName("new-environment")
-        Artifact artifact = new Artifact(
-                project: 'some-project', branch: 'some-branch'
+        IArtifact artifact = new IArtifact(
+                project: 'some-project',
+                branch: 'some-branch'
         )
         artifact.getLabels().put('some', 'label')
-        artifact.setEnvironment(environment)
         environment.getArtifacts().add(artifact)
 
         when:
@@ -61,21 +49,24 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         inserted.id
 
         and:
-        inserted.getArtifacts().size() == 1
+        inserted.artifacts.size() == 1
 
         and:
-        inserted.getArtifacts().first().labels.size() == 1
+        !inserted.artifacts.first().labels.isEmpty()
     }
 
 
     def "Save updating existing instance"() {
         given:
-        Environment environment = service.byName('main').get()
-        Artifact artifact = new Artifact(
-                project: 'some-project', branch: 'some-branch'
+        IEnvironment environment = new IEnvironment(
+                id: 1,
+                name: 'main'
+        )
+        IArtifact artifact = new IArtifact(
+                project: 'some-project',
+                branch: 'some-branch'
         )
         artifact.getLabels().put('some', 'label')
-        artifact.setEnvironment(environment)
         environment.getArtifacts().add(artifact)
 
 
@@ -87,7 +78,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
     }
 
     def "Save throwing Exception on duplicate Name"() {
-        Environment environment = new Environment()
+        IEnvironment environment = new IEnvironment()
         environment.setName("main")
 
         when:

@@ -6,7 +6,6 @@ import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
-import com.absolutegalaber.buildz.domain.view.DeployView
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.DeployRepository
@@ -44,24 +43,16 @@ class DeployService {
      * @return a list of views which represent Deploys on a Server
      * @throws InvalidRequestException  when the provided Server name is not associated to a Server
      */
-    List<DeployView> byServer(String serverName) throws InvalidRequestException {
+    List<Deploy> byServer(String serverName) throws InvalidRequestException {
         // TODO would it be better to use a join in the deploysOnServer repo call?
         Server server = serverService.byName(serverName)
                 .orElseThrow({ ->
                     new InvalidRequestException("No server found with name=${serverName}")
                 })
-
-        List<DeployView> deploys = new ArrayList<>()
-
         deployRepository.findAll(
                 deploysOnServer(server),
                 Sort.by('id').descending()
         )
-                .forEach({ deploy ->
-                    deploys.add(new DeployView(deploy))
-                })
-
-        return deploys
     }
 
     /**
@@ -71,12 +62,10 @@ class DeployService {
      * @return a view object that contains all relevant Deploy data
      * @throws DataNotFoundException    The provided ID is not associated to a Deploy
      */
-    DeployView byId(Long id) throws DataNotFoundException {
-        Deploy deploy = deployRepository.findOne(deployWithId(id)).orElseThrow(
+    Deploy byId(Long id) throws DataNotFoundException {
+        deployRepository.findOne(deployWithId(id)).orElseThrow(
                 { -> new DataNotFoundException("No Deploy found for deployId=" + id) }
         )
-
-        new DeployView(deploy)
     }
 
     /**
@@ -93,7 +82,7 @@ class DeployService {
      *                                  and/or buildNumber are not associated
      *                                  to an existing Build
      */
-    DeployView register(RegisterDeployEvent event) throws InvalidRequestException, DataNotFoundException {
+    Deploy register(RegisterDeployEvent event) throws InvalidRequestException, DataNotFoundException {
         Build build = buildRepository.findOne(buildWithProjectBranchAndNumber(
                 event.getProject(), event.getBranch(), event.getBuildNumber()
         ))
@@ -124,7 +113,7 @@ class DeployService {
             })
         }
 
-        new DeployView(deployRepository.save(deploy))
+        deployRepository.save(deploy)
     }
 
     /**
@@ -136,7 +125,7 @@ class DeployService {
      * @throws DataNotFoundException    When the provided Deploy ID is not
      *                                  registered in the Buildz System
      */
-    DeployView addLabels(Long id, Map<String, String> labels) throws DataNotFoundException {
+    Deploy addLabels(Long id, Map<String, String> labels) throws DataNotFoundException {
         Deploy deploy = deployRepository.findOne(deployWithId(id))
                 .orElseThrow({ -> new DataNotFoundException("No Build found for id'${id}'") })
 
@@ -152,6 +141,6 @@ class DeployService {
         }
 
 
-        new DeployView(deployRepository.save(deploy))
+        deployRepository.save(deploy)
     }
 }

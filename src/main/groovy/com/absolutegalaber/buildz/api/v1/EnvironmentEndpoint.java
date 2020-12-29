@@ -1,7 +1,7 @@
 package com.absolutegalaber.buildz.api.v1;
 
-import com.absolutegalaber.buildz.domain.Artifact;
-import com.absolutegalaber.buildz.domain.Environment;
+import com.absolutegalaber.buildz.api.model.IArtifact;
+import com.absolutegalaber.buildz.api.model.IEnvironment;
 import com.absolutegalaber.buildz.domain.EnvironmentBuilds;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
@@ -27,7 +27,7 @@ public interface EnvironmentEndpoint {
                     description = "Environment Saved",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Environment")
+                            schema = @Schema(ref = "#/components/schemas/IEnvironment")
                     )
             ),
             @ApiResponse(
@@ -45,16 +45,16 @@ public interface EnvironmentEndpoint {
             tags = "environments"
     )
     @PostMapping(value = "/api/v1/environments")
-    Environment save(
+    IEnvironment save(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Environment")
+                            schema = @Schema(ref = "#/components/schemas/IEnvironment")
                     ),
                     description = "The Environment to update/create.",
                     required = true
             )
-            @RequestBody Environment environment
+            @RequestBody IEnvironment environment
     ) throws InvalidRequestException;
 
     @ApiResponses({
@@ -63,7 +63,7 @@ public interface EnvironmentEndpoint {
                     description = "Environments Loaded",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Environment")
+                            schema = @Schema(ref = "#/components/schemas/IEnvironment")
                     )
             )
     })
@@ -81,7 +81,7 @@ public interface EnvironmentEndpoint {
                     description = "Environment Loaded",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Environment")
+                            schema = @Schema(ref = "#/components/schemas/IEnvironment")
                     )
             ),
             @ApiResponse(
@@ -99,7 +99,7 @@ public interface EnvironmentEndpoint {
             tags = "environments"
     )
     @GetMapping("/api/v1/environments/{name}")
-    Environment get(
+    IEnvironment get(
             @Parameter(name = "name", description = "Name of the configured Environment.")
             @PathVariable("name") String name
     ) throws DataNotFoundException;
@@ -124,11 +124,11 @@ public interface EnvironmentEndpoint {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Artifact"),
+                            schema = @Schema(ref = "#/components/schemas/IArtifact"),
                             array = @ArraySchema(minItems = 0)
                     )
             )
-            @RequestBody Set<Artifact> artifacts
+            @RequestBody Set<IArtifact> artifacts
     );
 
     @ApiResponses({

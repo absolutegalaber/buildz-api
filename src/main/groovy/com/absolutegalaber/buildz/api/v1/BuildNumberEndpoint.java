@@ -1,7 +1,7 @@
 package com.absolutegalaber.buildz.api.v1;
 
-import com.absolutegalaber.buildz.domain.BuildCount;
 import com.absolutegalaber.buildz.domain.ProjectBranch;
+import com.absolutegalaber.buildz.api.model.IBuildCount;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,13 +23,13 @@ public interface BuildNumberEndpoint {
                     description = "Provides the next BuildCount containing a sensible next Build Number.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/BuildCount")
+                            schema = @Schema(ref = "#/components/schemas/IBuildCount")
                     )
             )
     })
     @Operation(summary = "Get new BuildNumber", description = "Increment the Build Counter and Return the new BuildCount", tags = {"build-numbers"})
     @PostMapping("/api/v1/build-numbers/next")
-    BuildCount next(
+    IBuildCount next(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
@@ -45,13 +45,13 @@ public interface BuildNumberEndpoint {
                     description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/BuildCount")
+                            schema = @Schema(ref = "#/components/schemas/IBuildCount")
                     )
             )
     })
     @Operation(summary = "Get current BuildNumber", description = "Return the current BuildCount", tags = {"build-numbers"})
     @GetMapping("/api/v1/build-numbers/current/{project}/{branch}")
-    BuildCount current(
+    IBuildCount current(
             @Parameter(name = "project", description = "Name of the project to get the current BuildCount for")
             @PathVariable(name = "project")
                     String project,
@@ -66,11 +66,11 @@ public interface BuildNumberEndpoint {
                     description = "OK",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/BuildCount")
+                            schema = @Schema(ref = "#/components/schemas/IBuildCount")
                     )
             )
     })
     @Operation(summary = "Set current BuildNumber", description = "Set and return the current BuildCount", tags = {"build-numbers"})
     @PostMapping("/api/v1/build-numbers/set")
-    BuildCount set(@RequestBody BuildCount buildCount);
+    IBuildCount set(@RequestBody IBuildCount buildCount);
 }

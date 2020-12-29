@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+import java.util.Map.Entry
+
 import static com.absolutegalaber.buildz.repository.QuerySpecs.*
 
 @Service
@@ -40,17 +42,17 @@ class BuildService {
         return buildRepository.save(build)
     }
 
-    Build addLabels(Long buildId, List<BuildLabel> labels) throws DataNotFoundException {
+    Build addLabels(Long buildId, Map<String, String> labels) throws DataNotFoundException {
         Build build = byId(buildId).orElseThrow({ ->
             new DataNotFoundException("No Build found for buildId='${buildId}'")
         })
-        labels.forEach({ buildLabel ->
+        labels.each { Entry<String, String> entry ->
             build.getLabels().add(new BuildLabel(
-                    key: buildLabel.getKey(),
-                    value: buildLabel.getValue(),
+                    key: entry.key,
+                    value: entry.value,
                     build: build
             ))
-        })
+        }
         buildRepository.save(build)
     }
 

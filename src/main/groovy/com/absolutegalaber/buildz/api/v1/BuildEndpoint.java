@@ -1,8 +1,11 @@
 package com.absolutegalaber.buildz.api.v1;
 
-import com.absolutegalaber.buildz.domain.*;
+import com.absolutegalaber.buildz.domain.BuildSearch;
+import com.absolutegalaber.buildz.domain.BuildSearchResult;
+import com.absolutegalaber.buildz.domain.EnvironmentBuilds;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
+import com.absolutegalaber.buildz.api.model.IBuild;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
+import java.util.Map;
 
 @Tag(name = "builds", description = "Provides Management of (successful) Builds.")
 public interface BuildEndpoint {
@@ -45,7 +48,7 @@ public interface BuildEndpoint {
                             description = "Build Found",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(ref = "#/components/schemas/Build")
+                                    schema = @Schema(ref = "#/components/schemas/IBuild")
                             )
                     ),
                     @ApiResponse(
@@ -60,7 +63,7 @@ public interface BuildEndpoint {
             tags = {"builds"}
     )
     @GetMapping("/api/v1/builds/{buildId}")
-    Build get(@PathVariable(name = "buildId") Long buildId) throws DataNotFoundException;
+    IBuild get(@PathVariable(name = "buildId") Long buildId) throws DataNotFoundException;
 
     @ApiResponses({
             @ApiResponse(
@@ -68,7 +71,7 @@ public interface BuildEndpoint {
                     description = "Encironment Created.",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Build")
+                            schema = @Schema(ref = "#/components/schemas/IBuild")
                     )
             )
     })
@@ -77,9 +80,9 @@ public interface BuildEndpoint {
             description = "Creates a new Build.",
             tags = {"builds"})
     @PostMapping("/api/v1/builds/create")
-    Build create(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(ref = "#/components/schemas/Build", description = "The Build to create")
-            @RequestBody Build build
+    IBuild create(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(ref = "#/components/schemas/IBuild", description = "The Build to create")
+            @RequestBody IBuild build
     );
 
     @Operation(
@@ -93,15 +96,15 @@ public interface BuildEndpoint {
                     description = "Label Added",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(ref = "#/components/schemas/Build")
+                            schema = @Schema(ref = "#/components/schemas/IBuild")
                     )
             )
     })
     @PostMapping("/api/v1/builds/add-labels/{buildId}")
-    Build addLabels(
+    IBuild addLabels(
             @Parameter(name = "buildId", description = "Database ID of the build to add labels to.")
             @PathVariable(name = "buildId") Long buildId,
-            @RequestBody List<BuildLabel> buildLabels
+            @RequestBody Map<String, String> buildLabels
     ) throws InvalidRequestException;
 
     @ApiResponses({
