@@ -92,9 +92,7 @@ class ServerService {
     }
 
     Server.Reservation reserveServer(Server server, ReserveServerEvent event) throws InvalidRequestException {
-        if (!event.getReservedBy() || !event.getReservedBy().trim()) {
-            throw new InvalidRequestException("Reservation event does not include who is reserving the server")
-        }
+        // The validation of reservation by value is done outside of this method
         server.setReservation(new Server.Reservation(by: event.getReservedBy(), note: event.getReservationNote()))
 
         serverRepository.save(server).reservation
