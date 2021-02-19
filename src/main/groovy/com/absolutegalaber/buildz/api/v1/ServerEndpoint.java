@@ -3,6 +3,8 @@ package com.absolutegalaber.buildz.api.v1;
 import com.absolutegalaber.buildz.api.model.IServer;
 import com.absolutegalaber.buildz.domain.Server;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
+import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
+import com.absolutegalaber.buildz.events.ReserveServerEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,8 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -87,4 +88,30 @@ public interface ServerEndpoint {
     )
     @GetMapping("/api/v1/servers")
     List<IServer> list();
+
+    /**
+     * Reserve a Server for a specific person via a POST Request via the server's name.
+     *
+     * TODO: Discuss if a reservation should be override if this is called when there is an existing reservation
+     *
+     * @param name                      the name of a known Server
+     * @param event                     all relevant information to reserving a server
+     * @return                          the Reservation that was just created
+     * @throws DataNotFoundException    if the provided server name is not associated to a known Server
+     * @throws InvalidRequestException  if the provided reservation info is not valid
+     */
+    @PostMapping("/api/v1/servers/{name}/reservation")
+    Server.Reservation reserveServer(
+            @PathVariable("name") String name,
+            @RequestBody ReserveServerEvent event
+    ) throws DataNotFoundException, InvalidRequestException;
+
+    /**
+     * Remove the Reservation, if any, from the Server related to the provided Server name.
+     *
+     * @param name                      the name of a known Server
+     * @throws DataNotFoundException    If the provided server name is not associated to a known Server
+     */
+    @DeleteMapping("/api/v1/servers/{name}/reservation")
+    void releaseServer(@PathVariable("name") String name) throws DataNotFoundException;
 }

@@ -3,6 +3,7 @@ package com.absolutegalaber.buildz.service
 import com.absolutegalaber.buildz.BaseBuildzSpec
 import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
+import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
@@ -183,5 +184,46 @@ class DeployServiceTest extends BaseBuildzSpec {
         ['oldKey1': 'oldValue1', 'oldKey2': 'oldValue2'] | ['newKey': 'newValue']                           | 'Was able to add a single label to an existing deploy with multiple labels'
         ['oldKey1': 'oldValue1', 'oldKey2': 'oldValue2'] | ['newKey1': 'newValue1', 'newKey2': 'newValue2'] | 'Was able to add multiple labels to an existing deploy with multiple labels'
         // TODO expand test to handle overriding labels
+    }
+
+    @Unroll('#message')
+    def 'Valid Server reservation via Deploy tests'() {
+        when:
+        def serverName = 'Test Server 1'
+        deployService.register(new RegisterDeployEvent(
+                serverName: serverName,
+                project: 'backend',
+                branch: 'main',
+                buildNumber: 1,
+                reservedBy: by,
+                reservationNote: note
+        ))
+        Server server = serverService.byName(serverName).get()
+
+        then:
+        // First check to see if the reservation is expected to exist
+        def reservation = server.getReservation()
+        def valid = (reservation != null) == expected
+        // Now check if the reservation was found...
+        if (reservation != null) {
+            // ... and if so make sure it matches the provided by and notes params
+            valid = valid && reservation.getBy() == by && reservation.getNote() == note
+        }
+
+        valid
+
+        where:
+        by       | note   | expected | message
+        'Person' | null   | true     | 'Reserved a Server by "Person" without a note'
+        'Person' | 'note' | true     | 'Reserved a Server by "Person" with a note'
+        null     | null   | false    | 'Failed to create Reservation because the "by" variable is null (without note)'
+        ''       | null   | false    | 'Failed to create Reservation because the "by" variable is not set (without note)'
+        ' '      | null   | false    | 'Failed to create Reservation because the "by" variable is empty (without note)'
+        null     | ''     | false    | 'Failed to create Reservation because the "by" variable is null (with a not set note)'
+        ''       | ''     | false    | 'Failed to create Reservation because the "by" variable is not set (with a not set note)'
+        ' '      | ''     | false    | 'Failed to create Reservation because the "by" variable is empty (with a not set note)'
+        null     | ' '    | false    | 'Failed to create Reservation because the "by" variable is null (with empty note)'
+        ''       | ' '    | false    | 'Failed to create Reservation because the "by" variable is not set (with an empty note)'
+        ' '      | ' '    | false    | 'Failed to create Reservation because the "by" variable is empty (with an empty note)'
     }
 }

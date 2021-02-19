@@ -2,6 +2,8 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.api.model.IServer
+import com.absolutegalaber.buildz.domain.Server
+import com.absolutegalaber.buildz.events.ReserveServerEvent
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -45,5 +47,47 @@ class ServerEndpointImplTest extends BaseRestSpec {
 
         and:
         !response.body.isEmpty()
+    }
+
+    def "Reserve Server"() {
+        given:
+        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test Server 1/reservation"
+        String by = "Endpoint Test"
+        String note = "Testing"
+        ReserveServerEvent reservation = new ReserveServerEvent(reservedBy: by, reservationNote: note)
+
+        when:
+        ResponseEntity<Server.Reservation> response = restTemplate
+                .postForEntity(RESERVE_SERVER_URL, reservation, Server.Reservation)
+
+        then:
+        response.statusCode == HttpStatus.OK
+
+        and:
+        response.getBody() != null && response.getBody().by == by && response.getBody().note == note
+    }
+
+    def "Release Server"() {
+        given:
+        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test Server 1/reservation"
+        ReserveServerEvent reservation = new ReserveServerEvent(
+                reservedBy: "Endpoint Test",
+                reservationNote: "Testing"
+        )
+
+        when:
+        // First reserve a server...
+        restTemplate.postForEntity(RESERVE_SERVER_URL, reservation, Server.Reservation)
+        // ... release it...
+        restTemplate.delete(RESERVE_SERVER_URL)
+        // .. and finally get server to check for reservation
+        ResponseEntity<Server> response =
+                restTemplate.getForEntity("http://localhost:${port}/api/v1/servers/Test Server 1", Server)
+
+        then:
+        response.statusCode == HttpStatus.OK
+
+        and:
+        response.getBody().getReservation() == null
     }
 }

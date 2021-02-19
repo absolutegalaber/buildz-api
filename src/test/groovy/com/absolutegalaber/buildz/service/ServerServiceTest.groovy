@@ -2,8 +2,9 @@ package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.BaseBuildzSpec
 import com.absolutegalaber.buildz.domain.Server
+import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
-
+import com.absolutegalaber.buildz.events.ReserveServerEvent
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Subject
 import spock.lang.Unroll
@@ -65,5 +66,99 @@ class ServerServiceTest extends BaseBuildzSpec {
         null | 'Could not TrackServer with null name'
         ''   | 'Could not TrackServer with no name'
         ' '  | 'Could not TrackServer with empty name'
+    }
+
+    @Unroll('#message')
+    def 'Valid Server reservation tests'() {
+        when:
+        def serverName = 'Test Server 1'
+        service.reserveServerByName(serverName, new ReserveServerEvent(reservedBy: by, reservationNote: note))
+
+        then:
+        Server.Reservation reservation = service.byName(serverName).get().getReservation()
+        reservation != null && reservation.getBy() == by && reservation.getNote() == note
+
+        where:
+        by       | note   | message
+        'Person' | null   | 'Was able to reserve the Server by "Person" (with a null note)'
+        'Person' | ''     | 'Was able to reserve the Server by "Person" (with an unset note)'
+        'Person' | ' '    | 'Was able to reserve the Server by "Person" (with an empty note)'
+        'Person' | 'note' | 'Was able to reserve the Server by "Person" (with a note)'
+    }
+
+    @Unroll('#message')
+    def 'Invalid Server reservation tests'() {
+        when:
+        // The reservation note should not affect the reservation logic, so ignore it for these tests
+        service.reserveServerByName(serverName, new ReserveServerEvent(reservedBy: by))
+
+        then:
+        thrown(exception)
+
+        where:
+        serverName      | by       | exception               | message
+        null            | null     | InvalidRequestException | 'Could not reserve Server with null name (by null)'
+        null            | ''       | InvalidRequestException | 'Could not reserve Server with null name (by "")'
+        null            | 'Person' | InvalidRequestException | 'Could not reserve Server with null name (by "Person")'
+        ''              | null     | InvalidRequestException | 'Could not reserve Server with no name (by null)'
+        ''              | ''       | InvalidRequestException | 'Could not reserve Server with no name (by "")'
+        ''              | 'Person' | InvalidRequestException | 'Could not reserve Server with no name (by "Person")'
+        ' '             | null     | InvalidRequestException | 'Could not reserve Server with empty name (by null)'
+        ' '             | ''       | InvalidRequestException | 'Could not reserve Server with empty name (by "")'
+        ' '             | 'Person' | InvalidRequestException | 'Could not reserve Server with empty name (by "Person")'
+        'Fake Server'   | null     | DataNotFoundException   | 'Could not reserve Server with no name (by null)'
+        'Fake Server'   | ''       | DataNotFoundException   | 'Could not reserve Server with invalid name (by "")'
+        'Fake Server'   | 'Person' | DataNotFoundException   | 'Could not reserve Server with invalid name (by "Person")'
+        'Test Server 1' | null     | InvalidRequestException | 'Could not reserve Server with valid name (by null)'
+        'Test Server 1' | ''       | InvalidRequestException | 'Could not reserve Server with valid name (by "")'
+        'Test Server 1' | ' '      | InvalidRequestException | 'Could not reserve Server with valid name (by " ")'
+    }
+
+    // NOTE: No need to test the ServerService#reserveServer method since it is already tested by the
+    // ServerService#reserveServerByName tests
+
+    @Unroll('#message')
+    def 'Valid ReleaseServer tests'() {
+        given:
+        def serverName = 'Test Server 1'
+
+        when:
+        if (withReservation) {
+            service.reserveServerByName(
+                    serverName,
+                    new ReserveServerEvent(
+                            reservedBy: 'Splunk',
+                            reservationNote: 'Testing'
+                    )
+            )
+        }
+        service.releaseServerByName(serverName)
+
+        then:
+        Server server = service.byName(serverName).get()
+
+        !server.getReservation()
+
+        where:
+        withReservation | message
+        true            | 'Was able to release a Server with a reservation'
+        false           | 'Was able to release a Server with no reservation'
+    }
+
+    @Unroll('#message')
+    def 'Invalid ReleaseServer tests'() {
+
+        when:
+        service.releaseServerByName(serverName)
+
+        then:
+        thrown(exception)
+
+        where:
+        serverName    | exception | message
+        null          | InvalidRequestException | 'Was unable to release Server because serverName was null'
+        ''            | InvalidRequestException | 'Was unable to release Server because serverName was not set'
+        ' '           | InvalidRequestException | 'Was unable to release Server because serverName was empty'
+        'Fake Server' | DataNotFoundException   | 'Was unable to release Server because a Server with the provided Server name does not exist'
     }
 }

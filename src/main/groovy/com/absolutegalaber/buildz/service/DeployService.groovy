@@ -7,6 +7,7 @@ import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
+import com.absolutegalaber.buildz.events.ReserveServerEvent
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.DeployRepository
 import org.springframework.data.domain.Sort
@@ -113,7 +114,19 @@ class DeployService {
             })
         }
 
-        deployRepository.save(deploy)
+        Deploy savedDeploy = deployRepository.save(deploy)
+
+        if (event.getReservedBy()?.trim()) {
+            serverService.reserveServer(
+                    server,
+                    new ReserveServerEvent(
+                            reservedBy: event.getReservedBy(),
+                            reservationNote: event.getReservationNote()
+                    )
+            )
+        }
+
+        savedDeploy
     }
 
     /**

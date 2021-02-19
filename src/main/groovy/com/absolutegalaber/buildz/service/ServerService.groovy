@@ -1,8 +1,9 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.domain.Server
+import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
-
+import com.absolutegalaber.buildz.events.ReserveServerEvent
 import com.absolutegalaber.buildz.repository.ServerRepository
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -67,5 +68,47 @@ class ServerService {
      */
     List<Server> allServers() {
         serverRepository.findAll(Sort.by('name')).collect({it})
+    }
+
+    Server.Reservation reserveServerByName(
+            String serverName,
+            ReserveServerEvent event
+    ) throws DataNotFoundException, InvalidRequestException {
+        if (!serverName || !serverName.trim()) {
+            throw new InvalidRequestException("No Server Name provided")
+        }
+
+        Server server = serverRepository.findOne(serverWithName(serverName))
+                .orElseThrow(
+                        {-> new DataNotFoundException("Server with name ${serverName} has not been registered")
+                })
+
+        if (!event.getReservedBy() || !event.getReservedBy().trim()) {
+            throw new InvalidRequestException("Reservation event does not include who is reserving the server")
+        }
+        server.setReservation(new Server.Reservation(by: event.getReservedBy(), note: event.getReservationNote()))
+
+        serverRepository.save(server).reservation
+    }
+
+    Server.Reservation reserveServer(Server server, ReserveServerEvent event) throws InvalidRequestException {
+        // The validation of reservation by value is done outside of this method
+        server.setReservation(new Server.Reservation(by: event.getReservedBy(), note: event.getReservationNote()))
+
+        serverRepository.save(server).reservation
+    }
+
+    void releaseServerByName(String name) throws InvalidRequestException, DataNotFoundException {
+        if (!name || !name.trim()) {
+            throw new InvalidRequestException("No Server name provided")
+        }
+
+        Server server = serverRepository.findOne(serverWithName(name))
+                .orElseThrow({
+                    -> new DataNotFoundException("Server with name ${name} has not been registered")
+                })
+        server.setReservation(null)
+
+        serverRepository.save(server)
     }
 }
