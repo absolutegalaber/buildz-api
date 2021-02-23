@@ -25,20 +25,19 @@ class SearchResult<R> implements Serializable {
      */
     SearchResult() {}
 
-    protected SearchResult(
-            List<R> results,
-            Integer page,
-            Integer totalPages,
-            Long totalElements,
-            Boolean hasNext,
-            Boolean hasPrevious
-    ) {
-        this.results = results
-        this.page = page
-        this.totalPages = totalPages
-        this.totalElements = totalElements
-        this.hasNext = hasNext
-        this.hasPrevious = hasPrevious
+    /**
+     * A Constructor for child classes
+     *
+     * @param sr the SearchResult that the
+     * child is "cloning"
+     */
+    protected SearchResult(SearchResult sr) {
+        this.results = sr.results
+        this.page = sr.page
+        this.totalPages = sr.totalPages
+        this.totalElements = sr.totalElements
+        this.hasNext = sr.hasNext
+        this.hasPrevious = sr.hasPrevious
     }
 
     /**
@@ -52,12 +51,12 @@ class SearchResult<R> implements Serializable {
      */
     static <P, R> SearchResult fromPageResult(Page<P> result, Closure<R> transform) {
         new SearchResult(
-            result.getContent().collect(transform),
-            result.getNumber(),
-            result.getTotalPages(),
-            result.getTotalElements(),
-            result.hasNext(),
-            result.hasPrevious()
+            results: result.getContent().collect(transform),
+            page: result.getNumber(),
+            totalPages: result.getTotalPages(),
+            totalElements: result.getTotalElements(),
+            hasNext: result.hasNext(),
+            hasPrevious: result.hasPrevious()
         )
     }
 }

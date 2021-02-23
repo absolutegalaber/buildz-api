@@ -17,7 +17,7 @@ final class BuildSearchResult extends SearchResult<IBuild> {
     BuildSearchResult() {}
 
     private BuildSearchResult(SearchResult sr) {
-        super(sr.results, sr.page, sr.totalElements, sr.totalPages, sr.hasNext, sr.hasPrevious)
+        super(sr)
     }
 
     /**
