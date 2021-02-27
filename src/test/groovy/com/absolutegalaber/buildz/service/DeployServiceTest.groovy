@@ -31,7 +31,7 @@ class DeployServiceTest extends BaseBuildzSpec {
         where:
         serverName      | size | message
         'Empty Server'  | 0    | 'Fetching all deploys from server with no deploys'
-        'Test Server 1' | 2    | 'Fetching all deploys from server with deploys'
+        'Test Server 1' | 11   | 'Fetching all deploys from server with deploys'
     }
 
     @Unroll('#message')
@@ -184,6 +184,14 @@ class DeployServiceTest extends BaseBuildzSpec {
         ['oldKey1': 'oldValue1', 'oldKey2': 'oldValue2'] | ['newKey': 'newValue']                           | 'Was able to add a single label to an existing deploy with multiple labels'
         ['oldKey1': 'oldValue1', 'oldKey2': 'oldValue2'] | ['newKey1': 'newValue1', 'newKey2': 'newValue2'] | 'Was able to add multiple labels to an existing deploy with multiple labels'
         // TODO expand test to handle overriding labels
+    }
+
+    def "Attempt to add labels to a non existent Deploy"() {
+        when:
+        deployService.addLabels(-1, ['key': 'value'])
+
+        then:
+        thrown(DataNotFoundException)
     }
 
     @Unroll('#message')
