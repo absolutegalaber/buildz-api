@@ -439,4 +439,13 @@ VALUES (1, 'Test Server 1', null, null),
 
 INSERT INTO deploy(id, deployed_at, build_id, server_id)
 VALUES (1, NOW(), 1, 1),
-       (2, NOW(), 2, 1);
+       (2, NOW(), 2, 1),
+       (3, NOW(), 2, 1),
+       (4, NOW(), 2, 1),
+       (5, NOW(), 2, 1),
+       (6, NOW(), 2, 1),
+       (7, NOW(), 2, 1),
+       (8, NOW(), 2, 1),
+       (9, NOW(), 2, 1),
+       (10, NOW(), 2, 1),
+       (11, NOW(), 2, 1);
