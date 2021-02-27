@@ -2,6 +2,8 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.api.v1.DeployEndpoint
+import com.absolutegalaber.buildz.domain.DeploySearch
+import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
@@ -26,8 +28,13 @@ class DeployEndpointImpl implements DeployEndpoint {
     }
 
     @Override
-    List<IDeploy> list(String serverName) throws DataNotFoundException {
-        deployService.byServer(serverName).collect { IDeploy.of(it) }
+    DeploySearchResult search(
+            String serverName,
+            DeploySearch deploySearch
+    ) throws DataNotFoundException {
+        deploySearch.serverName = serverName
+
+        deployService.search(deploySearch)
     }
 
     @Override

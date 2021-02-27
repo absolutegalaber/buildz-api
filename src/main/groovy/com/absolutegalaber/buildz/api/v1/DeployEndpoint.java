@@ -1,6 +1,9 @@
 package com.absolutegalaber.buildz.api.v1;
 
 import com.absolutegalaber.buildz.api.model.IDeploy;
+import com.absolutegalaber.buildz.domain.BuildSearch;
+import com.absolutegalaber.buildz.domain.DeploySearch;
+import com.absolutegalaber.buildz.domain.DeploySearchResult;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
 import com.absolutegalaber.buildz.events.RegisterDeployEvent;
@@ -26,18 +29,18 @@ import java.util.Map;
 @Tag(name = "deploys", description = "Provides Management of (successful) Deploys.")
 public interface DeployEndpoint {
 
-    // TODO: Add support for searching via deploy date/time and/or label?
-
     /**
-     * An API path which, via a GET Request, attempts to find all Deploy related to a Server via that Server's name.
+     * An API path which, via a GET Request, attempts to find a page of Deploys related to a Server via that Server's
+     * name.
      *
      * @param serverName The name of the Server whose Deploys should be listed
-     * @return All Deploys that are associated to a specific Server
+     * @param search additional search information
+     * @return A search result that includes a page of Deploys and information about the page
      * @throws DataNotFoundException if serverName is not associated to any Server
      */
     @Operation(
             summary = "Load a list of Deploys by Server Name.",
-            description = "Load a list of Deploys and returns all Deploy-info",
+            description = "Load a list of Deploys based on a server and some search criteria",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -58,8 +61,11 @@ public interface DeployEndpoint {
             },
             tags = "deploys"
     )
-    @GetMapping("/api/v1/deploys/on/{serverName}")
-    List<IDeploy> list(@PathVariable(name = "serverName") String serverName) throws DataNotFoundException;
+    @PostMapping("/api/v1/deploys/on/{serverName}")
+    DeploySearchResult search(
+            @PathVariable(name = "serverName") String serverName,
+            @RequestBody DeploySearch search
+    ) throws DataNotFoundException;
 
     /**
      * An API path which, via a GET Request, attempts to find a {@link IDeploy}

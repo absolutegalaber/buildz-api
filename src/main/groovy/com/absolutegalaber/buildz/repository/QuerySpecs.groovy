@@ -185,11 +185,12 @@ class QuerySpecs {
      * @return              the Deploys deployed on the Server
      */
     // TODO Update to return DeployView
-    static Specification<Deploy> deploysOnServer(Server server) {
+    static Specification<Deploy> deploysOnServer(String serverName) {
         new Specification<Deploy>() {
             @Override
             Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaBuilder.equal(root.get(Deploy_.server), server)
+                Join<Deploy, Server> serverJoin = root.join(Deploy_.server)
+                criteriaBuilder.equal(serverJoin.get(Server_.name), serverName)
             }
         }
     }

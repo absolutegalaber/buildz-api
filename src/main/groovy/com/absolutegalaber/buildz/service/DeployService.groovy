@@ -3,6 +3,8 @@ package com.absolutegalaber.buildz.service
 import com.absolutegalaber.buildz.domain.Build
 import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
+import com.absolutegalaber.buildz.domain.DeploySearch
+import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
@@ -38,6 +40,19 @@ class DeployService {
     }
 
     /**
+     * Search for Deploys based on parameters provided
+     *
+     * @param search parameters for filtering deploys
+     * @return a search result that includes a page
+     * of deploys
+     */
+    DeploySearchResult search(DeploySearch search) {
+        DeploySearchResult.fromPageResult(
+                deployRepository.findAll(deploysOnServer(search.serverName), search.page())
+        )
+    }
+
+    /**
      * Find a list of Deploys via a Server name.
      *
      * @param serverName the name of a server
@@ -45,13 +60,12 @@ class DeployService {
      * @throws InvalidRequestException  when the provided Server name is not associated to a Server
      */
     List<Deploy> byServer(String serverName) throws InvalidRequestException {
-        // TODO would it be better to use a join in the deploysOnServer repo call?
         Server server = serverService.byName(serverName)
                 .orElseThrow({ ->
                     new InvalidRequestException("No server found with name=${serverName}")
                 })
         deployRepository.findAll(
-                deploysOnServer(server),
+                deploysOnServer(server.name),
                 Sort.by('id').descending()
         )
     }
