@@ -9,17 +9,17 @@ import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import spock.lang.Unroll
 
 class DeployEndpointImplTest extends BaseRestSpec {
 
+    @Unroll("#message")
     def "Search"() {
-        given:
-        String SEARCH_URL = "http://localhost:${port}/api/v1/deploys/on/Test Server 1"
-
         when:
+        DeploySearch ds = new DeploySearch(page: page)
         ResponseEntity<DeploySearchResult> responseEntity = restTemplate.postForEntity(
-                SEARCH_URL,
-                new DeploySearch(),
+                "http://localhost:${port}/api/v1/deploys/on/Test Server 1",
+                ds,
                 DeploySearchResult
         )
 
@@ -28,6 +28,12 @@ class DeployEndpointImplTest extends BaseRestSpec {
 
         and:
         !responseEntity.getBody().deploys.isEmpty()
+
+        where:
+        page | message
+        null | "testing with default page"
+        1    | "testing with second page of deploys"
+
     }
 
     def "Get"() {
