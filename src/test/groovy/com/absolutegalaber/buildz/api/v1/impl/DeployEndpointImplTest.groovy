@@ -2,8 +2,6 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.api.model.IDeploy
-import com.absolutegalaber.buildz.domain.BuildSearch
-import com.absolutegalaber.buildz.domain.BuildSearchResult
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
@@ -33,7 +31,6 @@ class DeployEndpointImplTest extends BaseRestSpec {
         page | message
         null | "testing with default page"
         1    | "testing with second page of deploys"
-
     }
 
     def "Get"() {
