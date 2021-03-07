@@ -2,24 +2,38 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.api.model.IDeploy
+import com.absolutegalaber.buildz.domain.BuildSearch
+import com.absolutegalaber.buildz.domain.BuildSearchResult
+import com.absolutegalaber.buildz.domain.DeploySearch
+import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import spock.lang.Unroll
 
 class DeployEndpointImplTest extends BaseRestSpec {
-    def "List"() {
-        given:
-        String serverName = 'Test Server 1'
-        String LIST_URKL = "http://localhost:${port}/api/v1/deploys/on/${serverName}"
 
+    @Unroll("#message")
+    def "Search"() {
         when:
-        ResponseEntity<List> response = restTemplate.getForEntity(LIST_URKL, List)
+        DeploySearch ds = new DeploySearch(page: page)
+        ResponseEntity<DeploySearchResult> responseEntity = restTemplate.postForEntity(
+                "http://localhost:${port}/api/v1/deploys/on/Test Server 1",
+                ds,
+                DeploySearchResult
+        )
 
         then:
-        response.statusCode == HttpStatus.OK
+        responseEntity.statusCode == HttpStatus.OK
 
         and:
-        !response.body.isEmpty()
+        !responseEntity.getBody().deploys.isEmpty()
+
+        where:
+        page | message
+        null | "testing with default page"
+        1    | "testing with second page of deploys"
+
     }
 
     def "Get"() {
