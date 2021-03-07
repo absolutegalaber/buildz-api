@@ -43,7 +43,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         environment.getArtifacts().add(artifact)
 
         when:
-        Environment inserted = service.save(environment)
+        Environment inserted = service.save(environment, false)
 
         then:
         inserted.id
@@ -71,7 +71,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
 
         when:
-        Environment inserted = service.save(environment)
+        Environment inserted = service.save(environment, false)
 
         then:
         inserted.id
@@ -82,7 +82,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         environment.setName("main")
 
         when:
-        service.save(environment)
+        service.save(environment, false)
 
         then:
         thrown(InvalidRequestException)

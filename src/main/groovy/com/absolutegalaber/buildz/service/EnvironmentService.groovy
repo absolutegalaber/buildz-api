@@ -30,13 +30,19 @@ class EnvironmentService {
         )
     }
 
-    Environment save(IEnvironment toSave) throws InvalidRequestException {
+    Environment save(IEnvironment toSave, boolean internalRequest) throws InvalidRequestException {
         Environment theEnvironment
         if (toSave.getId() != null) {
-            theEnvironment = update(toSave)
+            theEnvironment = update(toSave, internalRequest)
         } else {
             theEnvironment = insert(toSave)
         }
+
+        // If the current request is an internal one, the Environment must be marked as internal
+        if (internalRequest) {
+            theEnvironment.internal = true
+        }
+
         toSave.getArtifacts().each { IArtifact artifact ->
             Artifact newArtifact = new Artifact(
                     project: artifact.project,
@@ -51,9 +57,15 @@ class EnvironmentService {
         theEnvironment
     }
 
-    Environment update(IEnvironment toUpdate) throws InvalidRequestException {
+    Environment update(IEnvironment toUpdate, boolean internalRequest) throws InvalidRequestException {
         Environment theEnvironment = environmentRepository.findById(toUpdate.id)
                 .orElseThrow({ -> new InvalidRequestException("Environment with id='${toUpdate.id}' not found") })
+        if (!internalRequest && theEnvironment.isInternal()) {
+            throw new InvalidRequestException(String.format(
+                    "Environment with name='%s' is an internal Environment and can therefore cannot be updated",
+                    toUpdate.name
+            ))
+        }
         theEnvironment.name = toUpdate.name
         theEnvironment.artifacts.forEach({ Artifact artifact ->
             artifactRepository.delete(artifact)

@@ -28,7 +28,7 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
     @Override
     IEnvironment save(IEnvironment environment) throws InvalidRequestException {
         IEnvironment.of(
-                environmentService.save(environment)
+                environmentService.save(environment, false)
         )
     }
 
