@@ -16,8 +16,8 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        INSERT INTO environment (name)
-        SELECT CONCAT(name, ' Environment')
+        INSERT INTO environment (name, internal)
+        SELECT CONCAT(name, ' Environment'), TRUE
         FROM server
         WHERE id = server;
 

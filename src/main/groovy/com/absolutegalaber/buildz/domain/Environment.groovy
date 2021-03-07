@@ -24,4 +24,7 @@ class Environment implements Serializable {
 
     @OneToMany(mappedBy = 'environment', cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Artifact> artifacts = []
+
+    @Basic
+    boolean internal
 }
