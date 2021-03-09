@@ -98,4 +98,18 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         !service.allEnvironments().isEmpty()
     }
 
+    def "Attempts to update internal Environment with non-internal request"() {
+        IEnvironment environment = new IEnvironment()
+        environment.setName("testing")
+        Environment savedEnv = service.save(environment, true)
+
+        environment.setId(savedEnv.id)
+
+        when:
+        environment.setName("testing (update)")
+        service.save(environment, false)
+
+        then:
+        thrown(InvalidRequestException)
+    }
 }
