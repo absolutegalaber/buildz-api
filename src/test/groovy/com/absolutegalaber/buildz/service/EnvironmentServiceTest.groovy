@@ -112,4 +112,19 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         then:
         thrown(InvalidRequestException)
     }
+
+    def "Attempts to update an Environment with an invalid ID"() {
+        IEnvironment environment = new IEnvironment()
+        environment.setName("testing")
+        service.save(environment, false)
+
+        environment.setId(-1L)
+
+        when:
+        environment.setName("testing (update)")
+        service.save(environment, false)
+
+        then:
+        thrown(InvalidRequestException)
+    }
 }
