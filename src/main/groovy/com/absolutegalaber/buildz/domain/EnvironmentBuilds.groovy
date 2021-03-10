@@ -8,6 +8,7 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = ['environment', 'builds'])
 class EnvironmentBuilds implements Serializable {
     String environment
+    boolean internal
     Map<String, IBuild> builds = new TreeMap<String, IBuild>()
 
     void add(Build build) {
