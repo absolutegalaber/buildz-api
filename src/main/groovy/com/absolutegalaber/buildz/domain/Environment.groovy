@@ -24,4 +24,11 @@ class Environment implements Serializable {
 
     @OneToMany(mappedBy = 'environment', cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Artifact> artifacts = []
+
+    @Basic
+    boolean internal
+
+    static String generateInternalName(String name) {
+        String.format('%s Environment', name)
+    }
 }

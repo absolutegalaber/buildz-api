@@ -9,6 +9,7 @@ class IEnvironment implements Serializable {
     Long id
     String name
     List<IArtifact> artifacts = []
+    boolean internal
 
     static IEnvironment of(Environment environment) {
         new IEnvironment(
@@ -16,7 +17,8 @@ class IEnvironment implements Serializable {
                 name: environment.name,
                 artifacts: environment.artifacts.collect {
                     Artifact artifact -> IArtifact.of(artifact)
-                }
+                },
+                internal: environment.internal
         )
     }
 

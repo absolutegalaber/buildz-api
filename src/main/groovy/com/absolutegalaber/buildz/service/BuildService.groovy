@@ -130,7 +130,8 @@ class BuildService {
         }
         Environment theEnv = environment.get()
         EnvironmentBuilds toReturn = new EnvironmentBuilds(
-                environment: theEnv.name
+                environment: theEnv.name,
+                internal: theEnv.internal
         )
         theEnv.artifacts.forEach({ Artifact theArtifact ->
             latestArtifact(theArtifact)

@@ -1,10 +1,14 @@
 package com.absolutegalaber.buildz.service
 
+import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IEnvironment
+import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
 import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
+import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
@@ -28,15 +32,18 @@ class DeployService {
     private final BuildRepository buildRepository
     private final ServerService serverService
     private final DeployRepository deployRepository
+    private final EnvironmentService environmentService
 
     DeployService(
             BuildRepository buildRepository,
             ServerService serverService,
-            DeployRepository deployRepository
+            DeployRepository deployRepository,
+            EnvironmentService environmentService
     ) {
         this.buildRepository = buildRepository
         this.serverService = serverService
         this.deployRepository = deployRepository
+        this.environmentService = environmentService
     }
 
     /**
@@ -139,6 +146,28 @@ class DeployService {
                     )
             )
         }
+
+        Optional<Environment> environment =
+                environmentService.byName(Environment.generateInternalName(server.name))
+
+        IEnvironment toSave
+        if (environment.isPresent()) {
+            toSave = IEnvironment.of(environment.get())
+
+            IArtifact artifact = toSave.getArtifacts().find {
+                it.project == event.project && it.branch == event.branch
+            }
+            if (artifact == null) {
+                toSave.getArtifacts().add(new IArtifact(project: event.project, branch: event.branch))
+            }
+        } else {
+            toSave = new IEnvironment()
+
+            toSave.setName(Environment.generateInternalName(server.name))
+            toSave.setArtifacts([new IArtifact(project: event.project, branch: event.branch)])
+        }
+
+        environmentService.save(toSave, true)
 
         savedDeploy
     }

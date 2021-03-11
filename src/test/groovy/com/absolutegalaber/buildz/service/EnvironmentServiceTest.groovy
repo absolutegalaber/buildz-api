@@ -43,7 +43,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         environment.getArtifacts().add(artifact)
 
         when:
-        Environment inserted = service.save(environment)
+        Environment inserted = service.save(environment, false)
 
         then:
         inserted.id
@@ -71,7 +71,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
 
 
         when:
-        Environment inserted = service.save(environment)
+        Environment inserted = service.save(environment, false)
 
         then:
         inserted.id
@@ -82,7 +82,7 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         environment.setName("main")
 
         when:
-        service.save(environment)
+        service.save(environment, false)
 
         then:
         thrown(InvalidRequestException)
@@ -98,4 +98,33 @@ class EnvironmentServiceTest extends BaseBuildzSpec {
         !service.allEnvironments().isEmpty()
     }
 
+    def "Attempts to update internal Environment with non-internal request"() {
+        IEnvironment environment = new IEnvironment()
+        environment.setName("testing")
+        Environment savedEnv = service.save(environment, true)
+
+        environment.setId(savedEnv.id)
+
+        when:
+        environment.setName("testing (update)")
+        service.save(environment, false)
+
+        then:
+        thrown(InvalidRequestException)
+    }
+
+    def "Attempts to update an Environment with an invalid ID"() {
+        IEnvironment environment = new IEnvironment()
+        environment.setName("testing")
+        service.save(environment, false)
+
+        environment.setId(-1L)
+
+        when:
+        environment.setName("testing (update)")
+        service.save(environment, false)
+
+        then:
+        thrown(InvalidRequestException)
+    }
 }

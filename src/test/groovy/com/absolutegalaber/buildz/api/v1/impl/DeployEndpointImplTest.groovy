@@ -2,8 +2,6 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.api.model.IDeploy
-import com.absolutegalaber.buildz.domain.BuildSearch
-import com.absolutegalaber.buildz.domain.BuildSearchResult
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
@@ -33,7 +31,6 @@ class DeployEndpointImplTest extends BaseRestSpec {
         page | message
         null | "testing with default page"
         1    | "testing with second page of deploys"
-
     }
 
     def "Get"() {
@@ -55,21 +52,27 @@ class DeployEndpointImplTest extends BaseRestSpec {
         given:
         String REGISTER_URL = "http://localhost:${port}/api/v1/deploys/create"
         RegisterDeployEvent body = new RegisterDeployEvent(
-                serverName: 'MYShinyNewServer',
-                project: 'backend',
+                serverName: serverName,
+                project: project,
                 branch: 'main',
                 buildNumber: 1,
                 labels: ['type': 'hotfix']
         )
-        when:
         ResponseEntity<IDeploy> response = restTemplate.postForEntity(REGISTER_URL, body, IDeploy)
 
-        then:
+        expect:
         response.statusCode == HttpStatus.OK
+
         and:
         response.body.id
+
         and:
         !response.body.labels.isEmpty()
+
+        where:
+        project      | serverName
+        "backend"    | 'MyShinyNewServer'
+        "frontend"   | "Test Server 1"
     }
 
     def "Register With Wrong data"() {
@@ -87,6 +90,31 @@ class DeployEndpointImplTest extends BaseRestSpec {
 
         then:
         response.statusCode == HttpStatus.NOT_FOUND
+    }
+
+    def "Multiple registrations"() {
+        when:
+        String REGISTER_URL = "http://localhost:${port}/api/v1/deploys/create"
+        RegisterDeployEvent firstRegistration = new RegisterDeployEvent(
+                serverName: 'Test Server 1',
+                project: 'backend',
+                branch: 'main',
+                buildNumber: 1
+        )
+        restTemplate.postForEntity(REGISTER_URL, firstRegistration, IDeploy)
+
+        RegisterDeployEvent secondRegistration = new RegisterDeployEvent(
+                serverName: 'Test Server 1',
+                project: 'backend',
+                branch: 'next',
+                buildNumber: 1
+        )
+        restTemplate.postForEntity(REGISTER_URL, firstRegistration, IDeploy)
+        ResponseEntity<IDeploy> response = restTemplate.postForEntity(REGISTER_URL, secondRegistration, IDeploy)
+
+        then:
+        response.statusCode == HttpStatus.OK
+
     }
 
     def "AddLabels"() {
