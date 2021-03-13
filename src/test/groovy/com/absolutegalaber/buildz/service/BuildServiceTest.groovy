@@ -115,7 +115,7 @@ class BuildServiceTest extends BaseBuildzSpec {
             artifact.getLabels().put(theLabelKey, theLabelValue)
         }
         when:
-        Optional<Build> latest = service.latestArtifact(artifact)
+        Optional<Build> latest = service.withBuildNumberOrLatestArtifact(artifact)
 
         then:
         if (expectedBuildNumber) {

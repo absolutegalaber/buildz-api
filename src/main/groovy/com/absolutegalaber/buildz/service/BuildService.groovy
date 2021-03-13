@@ -106,8 +106,20 @@ class BuildService {
         theQuerySpecification
     }
 
-
-    Optional<Build> latestArtifact(Artifact artifact) {
+    /**
+     * Fetch a {@link Build} based on the provided {@link Artifact}.
+     *
+     * If the artifact includes a build number attempt to find
+     * the build with said build number.
+     *
+     * If there is no build number set on the artifact, the
+     * latest build will be fetched
+     *
+     * @param artifact an artifact that contains info related to
+     * a specific Build
+     * @return the associated Build or "empty" if no Build was found
+     */
+    Optional<Build> withBuildNumberOrLatestArtifact(Artifact artifact) {
         BuildSearch theSearch = BuildSearch.fromArtifact(artifact)
         Page<Build> searchResult = buildRepository.findAll(toSpecification(theSearch), theSearch.page())
         searchResult.isEmpty() ? Optional.empty() : Optional.of(searchResult.getContent().first())
@@ -134,7 +146,7 @@ class BuildService {
                 internal: theEnv.internal
         )
         theEnv.artifacts.forEach({ Artifact theArtifact ->
-            latestArtifact(theArtifact)
+            withBuildNumberOrLatestArtifact(theArtifact)
                     .ifPresent({ Build build ->
                         toReturn.add(build)
                     })
