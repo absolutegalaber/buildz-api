@@ -87,9 +87,7 @@ class EnvironmentService {
         byName(name).ifPresent(environmentRepository.&delete)
     }
 
-    List<String> allEnvironments() {
-        environmentRepository.findAll(
-                Sort.by('name')
-        ).collect { it.name }
+    Iterable<Environment> allEnvironments() {
+        environmentRepository.findAll(Sort.by('name'))
     }
 }

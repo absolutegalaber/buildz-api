@@ -68,12 +68,30 @@ public interface EnvironmentEndpoint {
             )
     })
     @Operation(
-            summary = "List all Environments",
-            description = "Returns all known Environments.",
+            summary = "List all user defined Environments",
+            description = "Returns all user defined Environments.",
             tags = "environments"
     )
     @GetMapping("/api/v1/environments")
-    List<String> list() throws DataNotFoundException;
+    List<String> listUserDefined();
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Environments Loaded",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/IEnvironment")
+                    )
+            )
+    })
+    @Operation(
+            summary = "List all Environments",
+            description = "Returns all known Environments including 'internal' ones.",
+            tags = "environments"
+    )
+    @GetMapping("/api/v1/environments/all")
+    List<IEnvironment> allEnvironment();
 
     @ApiResponses({
             @ApiResponse(

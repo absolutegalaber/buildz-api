@@ -411,6 +411,9 @@ VALUES (2, 'main', 'frontend', 1);
 INSERT INTO environment (id, name)
 VALUES (2, 'feature-test-stage-1');
 
+INSERT INTO environment (id, name, internal)
+VALUES (3, 'Environment of StageServer', true);
+
 INSERT INTO project(id, active)
 VALUES ('backend', 1),
        ('backoffice', 1),

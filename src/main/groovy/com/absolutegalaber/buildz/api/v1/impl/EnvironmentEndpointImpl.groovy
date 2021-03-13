@@ -3,8 +3,8 @@ package com.absolutegalaber.buildz.api.v1.impl
 import com.absolutegalaber.buildz.api.model.IArtifact
 import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.api.v1.EnvironmentEndpoint
-import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
+import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.EnvironmentBuilds
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
@@ -42,8 +42,19 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
     }
 
     @Override
-    List<String> list() throws DataNotFoundException {
-        environmentService.allEnvironments()
+    List<String> listUserDefined() {
+        List<Environment> userDefined = environmentService.allEnvironments()
+                .findAll { !it.internal }
+        userDefined.collect { it.name }
+    }
+
+    @Override
+    List<IEnvironment> allEnvironment() {
+        List<IEnvironment> toReturn = []
+        environmentService.allEnvironments().forEach({ env ->
+            toReturn.add(IEnvironment.shallow(env))
+        })
+        toReturn
     }
 
     @Override

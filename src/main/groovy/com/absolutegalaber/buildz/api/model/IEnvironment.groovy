@@ -22,4 +22,12 @@ class IEnvironment implements Serializable {
         )
     }
 
+    static IEnvironment shallow(Environment environment) {
+        new IEnvironment(
+                id: environment.id,
+                name: environment.name,
+                internal: environment.internal
+        )
+    }
+
 }
