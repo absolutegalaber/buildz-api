@@ -402,8 +402,8 @@ VALUES (1, 'integration-test', 'ok', 1),
 -- environments
 INSERT INTO environment (id, name)
 VALUES (1, 'main');
-INSERT INTO artifact (id, branch, project, environment_id)
-VALUES (1, 'main', 'backend', 1);
+INSERT INTO artifact (id, branch, project, environment_id, build_number)
+VALUES (1, 'main', 'backend', 1, '9');
 INSERT INTO artifact (id, branch, project, environment_id)
 VALUES (2, 'main', 'frontend', 1);
 
