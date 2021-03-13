@@ -15,7 +15,7 @@ class BuildSearch extends BaseSearch {
     Map<String, String> labels = [:]
 
     static BuildSearch fromArtifact(Artifact artifact) {
-        new BuildSearch(
+        BuildSearch newBuildSearch = new BuildSearch(
                 project: artifact.project,
                 branch: artifact.branch,
                 labels: artifact.labels,
@@ -24,6 +24,17 @@ class BuildSearch extends BaseSearch {
                 sortAttribute: DEFAULT_SORT_ATTRIBUTE,
                 sortDirection: Sort.Direction.DESC.name()
         )
+
+        if (artifact.buildNumber != null && artifact.buildNumber > 0) {
+            // The min and max build number search params are exclusive
+            // so to ensure that only the provided build number is
+            // returned set the minBuildNumber to the buildNumber minus one
+            // and the maxBuildNumber to the buildNumber plus one
+            newBuildSearch.minBuildNumber = artifact.buildNumber - 1
+            newBuildSearch.maxBuildNumber = artifact.buildNumber + 1
+        }
+
+        newBuildSearch
     }
 
     protected String defaultSortAttribute() {

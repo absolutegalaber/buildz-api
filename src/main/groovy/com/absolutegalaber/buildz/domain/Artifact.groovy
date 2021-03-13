@@ -8,8 +8,8 @@ import javax.persistence.*
 
 @Entity
 @Table(name = 'artifact')
-@ToString(includes = ['id', 'project', 'branch', 'labels'])
-@EqualsAndHashCode(includes = ['id', 'project', 'branch', 'labels'])
+@ToString(includes = ['id', 'project', 'branch', 'buildNumber', 'labels'])
+@EqualsAndHashCode(includes = ['id', 'project', 'branch', 'buildNumber', 'labels'])
 class Artifact implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,10 @@ class Artifact implements Serializable{
     @Basic(optional = false)
     @Column(name = 'branch')
     String branch
+
+    @Basic(optional = true)
+    @Column(name = 'build_number')
+    Long buildNumber
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = 'artifact_labels', joinColumns = @JoinColumn(name = 'artifact_id'))
