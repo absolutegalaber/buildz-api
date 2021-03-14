@@ -441,14 +441,14 @@ VALUES (1, 'Test-Server-1', null, null),
        (2, 'Empty-Server', 'Test Account', 'Checking if reservation works');
 
 INSERT INTO deploy(id, deployed_at, build_id, server_id)
-VALUES (1, CURRENT_DATE - INTERVAL 1 DAY, 1, 1),
-       (2, CURRENT_DATE - INTERVAL 2 DAY, 2, 1),
-       (3, CURRENT_DATE - INTERVAL 3 DAY, 2, 1),
-       (4, CURRENT_DATE - INTERVAL 4 DAY, 2, 1),
-       (5, CURRENT_DATE - INTERVAL 5 DAY, 2, 1),
-       (6, CURRENT_DATE - INTERVAL 6 DAY, 2, 1),
-       (7, CURRENT_DATE - INTERVAL 7 DAY, 2, 1),
-       (8, CURRENT_DATE - INTERVAL 8 DAY, 2, 1),
-       (9, CURRENT_DATE - INTERVAL 9 DAY, 2, 1),
-       (10, CURRENT_DATE - INTERVAL 10 DAY, 2, 1),
-       (11, CURRENT_DATE - INTERVAL 11 DAY, 2, 1);
+VALUES (1, (NOW() - INTERVAL 5 YEAR), 1, 1),
+       (2, (NOW() - INTERVAL 1 YEAR), 2, 1),
+       (3, (NOW() - INTERVAL 6 MONTH), 2, 1),
+       (4, (NOW() - INTERVAL 1 MONTH), 2, 1),
+       (5, (NOW() - INTERVAL 2 WEEK), 2, 1),
+       (6, (NOW() - INTERVAL 1 WEEK), 2, 1),
+       (7, (NOW() - INTERVAL 3 DAY), 2, 1),
+       (8, (NOW() - INTERVAL 1 DAY), 2, 1),
+       (9, (NOW() - INTERVAL 6 HOUR), 2, 1),
+       (10, (NOW() - INTERVAL 1 HOUR), 2, 1),
+       (11, NOW(), 2, 1);
