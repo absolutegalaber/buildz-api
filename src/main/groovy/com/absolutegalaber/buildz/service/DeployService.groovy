@@ -60,24 +60,6 @@ class DeployService {
     }
 
     /**
-     * Find a list of Deploys via a Server name.
-     *
-     * @param serverName the name of a server
-     * @return a list of views which represent Deploys on a Server
-     * @throws InvalidRequestException  when the provided Server name is not associated to a Server
-     */
-    List<Deploy> byServer(String serverName) throws InvalidRequestException {
-        Server server = serverService.byName(serverName)
-                .orElseThrow({ ->
-                    new InvalidRequestException("No server found with name=${serverName}")
-                })
-        deployRepository.findAll(
-                deploysOnServer(server.name),
-                Sort.by('id').descending()
-        )
-    }
-
-    /**
      * Find a Deploy via its ID and return all data that is relevant to the user.
      *
      * @param id the ID of a Deploy saved in the Buildz System

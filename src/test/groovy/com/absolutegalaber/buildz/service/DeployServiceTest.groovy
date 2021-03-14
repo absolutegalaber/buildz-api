@@ -21,33 +21,6 @@ class DeployServiceTest extends BaseBuildzSpec {
     ServerService serverService
 
     @Unroll('#message')
-    def 'Successful byServer calls'() {
-        when:
-        List<Deploy> deploys = deployService.byServer(serverName)
-
-        then:
-        deploys.size() == size
-
-        where:
-        serverName      | size | message
-        'Empty-Server'  | 0    | 'Fetching all deploys from server with no deploys'
-        'Test-Server-1' | 11   | 'Fetching all deploys from server with deploys'
-    }
-
-    @Unroll('#message')
-    def 'Failing byServer calls'() {
-        when:
-        deployService.byServer(serverName)
-
-        then:
-        thrown(exception)
-
-        where:
-        serverName     | exception               | message
-        'Not A Server' | InvalidRequestException | 'Fetching all deploys from a non-existent server'
-    }
-
-    @Unroll('#message')
     def 'ById'() {
         when:
         boolean found
