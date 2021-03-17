@@ -158,7 +158,20 @@ class DeployService {
                 it.project == event.project && it.branch == event.branch
             }
             if (artifact == null) {
-                toSave.getArtifacts().add(new IArtifact(project: event.project, branch: event.branch))
+                toSave.getArtifacts().add(new IArtifact(
+                        project: event.project,
+                        branch: event.branch,
+                        buildNumber: event.buildNumber
+                ))
+            } else {
+                // First remove the current Artifact...
+                toSave.getArtifacts().remove(artifact)
+                // then re-add the Artifact with an updated BuildNumber
+                toSave.getArtifacts().add(new IArtifact(
+                        project: event.project,
+                        branch: event.branch,
+                        buildNumber: event.buildNumber
+                ))
             }
         } else {
             toSave = new IEnvironment()
