@@ -9,6 +9,7 @@ import com.absolutegalaber.buildz.service.ServerService
 import org.springframework.web.bind.annotation.RestController
 
 import javax.transaction.Transactional
+import java.nio.charset.StandardCharsets
 
 /**
  * Implementation of {@link ServerEndpoint}
@@ -24,9 +25,10 @@ class ServerEndpointImpl implements ServerEndpoint {
 
     @Override
     IServer get(String name) throws DataNotFoundException {
+        String nameDecoded = URLDecoder.decode(name, StandardCharsets.UTF_8.name())
         IServer.of(
-                serverService.byName(name)
-                        .orElseThrow({ -> new DataNotFoundException("No Server found with name=${name}") })
+                serverService.byName(nameDecoded)
+                        .orElseThrow({ -> new DataNotFoundException("No Server found with name=${nameDecoded}") })
         )
     }
 
@@ -41,7 +43,7 @@ class ServerEndpointImpl implements ServerEndpoint {
     }
 
     @Override
-    void  releaseServer(String name) {
+    void releaseServer(String name) {
         serverService.releaseServerByName(name)
     }
 }

@@ -437,18 +437,18 @@ VALUES ('main', 'backend', 1),
        ('merged', 'abandoned', 0);
 
 INSERT INTO server(id, name, reserved_by, reservation_note)
-VALUES (1, 'Test Server 1', null, null),
-       (2, 'Empty Server', 'Test Account', 'Checking if reservation works');
+VALUES (1, 'Test-Server-1', null, null),
+       (2, 'Empty-Server', 'Test Account', 'Checking if reservation works');
 
 INSERT INTO deploy(id, deployed_at, build_id, server_id)
 VALUES (1, NOW(), 1, 1),
-       (2, NOW(), 2, 1),
-       (3, NOW(), 2, 1),
-       (4, NOW(), 2, 1),
-       (5, NOW(), 2, 1),
-       (6, NOW(), 2, 1),
-       (7, NOW(), 2, 1),
-       (8, NOW(), 2, 1),
-       (9, NOW(), 2, 1),
-       (10, NOW(), 2, 1),
-       (11, NOW(), 2, 1);
+       (2, NOW() - 1, 2, 1),
+       (3, NOW() - 2, 2, 1),
+       (4, NOW() - 3, 2, 1),
+       (5, NOW() - 4, 2, 1),
+       (6, NOW() - 5, 2, 1),
+       (7, NOW() - 6, 2, 1),
+       (8, NOW() - 7, 2, 1),
+       (9, NOW() - 8, 2, 1),
+       (10, NOW() - 9, 2, 1),
+       (11, NOW() - 10, 2, 1);

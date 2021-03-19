@@ -33,8 +33,7 @@ public interface DeployEndpoint {
      * An API path which, via a GET Request, attempts to find a page of Deploys related to a Server via that Server's
      * name.
      *
-     * @param serverName The name of the Server whose Deploys should be listed
-     * @param search additional search information
+     * @param search The DeploysSearch
      * @return A search result that includes a page of Deploys and information about the page
      * @throws DataNotFoundException if serverName is not associated to any Server
      */
@@ -61,9 +60,8 @@ public interface DeployEndpoint {
             },
             tags = "deploys"
     )
-    @PostMapping("/api/v1/deploys/on/{serverName}")
+    @PostMapping("/api/v1/deploys/on")
     DeploySearchResult search(
-            @PathVariable(name = "serverName") String serverName,
             @RequestBody DeploySearch search
     ) throws DataNotFoundException;
 

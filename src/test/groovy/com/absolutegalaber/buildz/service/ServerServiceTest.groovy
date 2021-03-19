@@ -25,7 +25,7 @@ class ServerServiceTest extends BaseBuildzSpec {
         where:
         name            | expected | message
         "Doest exist"   | false    | 'ByName did not find non-existent Server'
-        "Test Server 1" | true     | 'ByName found existing Server'
+        "Test-Server-1" | true     | 'ByName found existing Server'
     }
 
     @Unroll("#message")
@@ -49,8 +49,8 @@ class ServerServiceTest extends BaseBuildzSpec {
 
         where:
         name              | message
-        "New Test Server" | 'TrackServer could not find existing Server so new one was created'
-        "Test Server 1"   | 'TrackServer found an existing Server so a new one was not created'
+        "New-Test-Server" | 'TrackServer could not find existing Server so new one was created'
+        "Test-Server-1"   | 'TrackServer found an existing Server so a new one was not created'
     }
 
     @Unroll("#message")
@@ -71,7 +71,7 @@ class ServerServiceTest extends BaseBuildzSpec {
     @Unroll('#message')
     def 'Valid Server reservation tests'() {
         when:
-        def serverName = 'Test Server 1'
+        def serverName = 'Test-Server-1'
         service.reserveServerByName(serverName, new ReserveServerEvent(reservedBy: by, reservationNote: note))
 
         then:
@@ -106,12 +106,12 @@ class ServerServiceTest extends BaseBuildzSpec {
         ' '             | null     | InvalidRequestException | 'Could not reserve Server with empty name (by null)'
         ' '             | ''       | InvalidRequestException | 'Could not reserve Server with empty name (by "")'
         ' '             | 'Person' | InvalidRequestException | 'Could not reserve Server with empty name (by "Person")'
-        'Fake Server'   | null     | DataNotFoundException   | 'Could not reserve Server with no name (by null)'
-        'Fake Server'   | ''       | DataNotFoundException   | 'Could not reserve Server with invalid name (by "")'
-        'Fake Server'   | 'Person' | DataNotFoundException   | 'Could not reserve Server with invalid name (by "Person")'
-        'Test Server 1' | null     | InvalidRequestException | 'Could not reserve Server with valid name (by null)'
-        'Test Server 1' | ''       | InvalidRequestException | 'Could not reserve Server with valid name (by "")'
-        'Test Server 1' | ' '      | InvalidRequestException | 'Could not reserve Server with valid name (by " ")'
+        'Fake-Server'   | null     | DataNotFoundException   | 'Could not reserve Server with no name (by null)'
+        'Fake-Server'   | ''       | DataNotFoundException   | 'Could not reserve Server with invalid name (by "")'
+        'Fake-Server'   | 'Person' | DataNotFoundException   | 'Could not reserve Server with invalid name (by "Person")'
+        'Test-Server-1' | null     | InvalidRequestException | 'Could not reserve Server with valid name (by null)'
+        'Test-Server-1' | ''       | InvalidRequestException | 'Could not reserve Server with valid name (by "")'
+        'Test-Server-1' | ' '      | InvalidRequestException | 'Could not reserve Server with valid name (by " ")'
     }
 
     // NOTE: No need to test the ServerService#reserveServer method since it is already tested by the
@@ -120,7 +120,7 @@ class ServerServiceTest extends BaseBuildzSpec {
     @Unroll('#message')
     def 'Valid ReleaseServer tests'() {
         given:
-        def serverName = 'Test Server 1'
+        def serverName = 'Test-Server-1'
 
         when:
         if (withReservation) {
@@ -155,10 +155,10 @@ class ServerServiceTest extends BaseBuildzSpec {
         thrown(exception)
 
         where:
-        serverName    | exception | message
+        serverName    | exception               | message
         null          | InvalidRequestException | 'Was unable to release Server because serverName was null'
         ''            | InvalidRequestException | 'Was unable to release Server because serverName was not set'
         ' '           | InvalidRequestException | 'Was unable to release Server because serverName was empty'
-        'Fake Server' | DataNotFoundException   | 'Was unable to release Server because a Server with the provided Server name does not exist'
+        'Fake-Server' | DataNotFoundException   | 'Was unable to release Server because a Server with the provided Server name does not exist'
     }
 }

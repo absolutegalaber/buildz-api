@@ -30,8 +30,8 @@ class DeployServiceTest extends BaseBuildzSpec {
 
         where:
         serverName      | size | message
-        'Empty Server'  | 0    | 'Fetching all deploys from server with no deploys'
-        'Test Server 1' | 11   | 'Fetching all deploys from server with deploys'
+        'Empty-Server'  | 0    | 'Fetching all deploys from server with no deploys'
+        'Test-Server-1' | 11   | 'Fetching all deploys from server with deploys'
     }
 
     @Unroll('#message')
@@ -84,14 +84,14 @@ class DeployServiceTest extends BaseBuildzSpec {
 
         where:
         serverName      | project   | branch | buildNumber | labels                               | message
-        'Test Server 1' | 'backend' | 'main' | 1           | null                                 | 'Register a valid Deploy with no labels'
-        'Test Server 1' | 'backend' | 'main' | 1           | ['key': 'value']                     | 'Register a valid Deploy with one label'
-        'Test Server 1' | 'backend' | 'main' | 1           | ['key1': 'value1', 'key2': 'value2'] | 'Register a valid Deploy with two valid labels'
-        'Test Server 1' | 'backend' | 'main' | 1           | ['key': 'value', 'key': 'value']     | 'Register a valid Deploy with duplicate labels'
-        'New Server'    | 'backend' | 'main' | 1           | null                                 | 'Register a valid Deploy to a new Server with no labels'
-        'New Server'    | 'backend' | 'main' | 1           | ['key': 'value']                     | 'Register a valid Deploy to a new Server with one label'
-        'New Server'    | 'backend' | 'main' | 1           | ['key1': 'value1', 'key2': 'value2'] | 'Register a valid Deploy to a new Server with two valid labels'
-        'New Server'    | 'backend' | 'main' | 1           | ['key': 'value', 'key': 'value']     | 'Register a valid Deploy to a new Server with duplicate labels'
+        'Test-Server-1' | 'backend' | 'main' | 1           | null                                 | 'Register a valid Deploy with no labels'
+        'Test-Server-1' | 'backend' | 'main' | 1           | ['key': 'value']                     | 'Register a valid Deploy with one label'
+        'Test-Server-1' | 'backend' | 'main' | 1           | ['key1': 'value1', 'key2': 'value2'] | 'Register a valid Deploy with two valid labels'
+        'Test-Server-1' | 'backend' | 'main' | 1           | ['key': 'value', 'key': 'value']     | 'Register a valid Deploy with duplicate labels'
+        'New-Server'    | 'backend' | 'main' | 1           | null                                 | 'Register a valid Deploy to a new Server with no labels'
+        'New-Server'    | 'backend' | 'main' | 1           | ['key': 'value']                     | 'Register a valid Deploy to a new Server with one label'
+        'New-Server'    | 'backend' | 'main' | 1           | ['key1': 'value1', 'key2': 'value2'] | 'Register a valid Deploy to a new Server with two valid labels'
+        'New-Server'    | 'backend' | 'main' | 1           | ['key': 'value', 'key': 'value']     | 'Register a valid Deploy to a new Server with duplicate labels'
     }
 
     @Unroll('#message')
@@ -131,16 +131,16 @@ class DeployServiceTest extends BaseBuildzSpec {
 
         where:
         serverName      | project   | branch | buildNumber | labels | message
-        'Test Server 1' | 'invalid' | 'main' | 1           | null   | 'Failed to register a Deploy with invalid project'
-        'Test Server 1' | 'backend' | 'nope' | 1           | null   | 'Failed to register a Deploy with invalid branch'
-        'Test Server 1' | 'backend' | 'main' | -1          | null   | 'Failed to register a Deploy with invalid buildNumber'
+        'Test-Server-1' | 'invalid' | 'main' | 1           | null   | 'Failed to register a Deploy with invalid project'
+        'Test-Server-1' | 'backend' | 'nope' | 1           | null   | 'Failed to register a Deploy with invalid branch'
+        'Test-Server-1' | 'backend' | 'main' | -1          | null   | 'Failed to register a Deploy with invalid buildNumber'
     }
 
     @Unroll('#message')
     def "Add labels to a Deploy"() {
         when:
         Deploy newDeploy = deployService.register(new RegisterDeployEvent(
-                serverName: 'Test Server 1',
+                serverName: 'Test-Server-1',
                 project: 'backend',
                 branch: 'main',
                 buildNumber: 1,
@@ -197,7 +197,7 @@ class DeployServiceTest extends BaseBuildzSpec {
     @Unroll('#message')
     def 'Valid Server reservation via Deploy tests'() {
         when:
-        def serverName = 'Test Server 1'
+        def serverName = 'Test-Server-1'
         deployService.register(new RegisterDeployEvent(
                 serverName: serverName,
                 project: 'backend',
