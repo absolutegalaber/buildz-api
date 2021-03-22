@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.absolutegalaber</groupId>
     <artifactId>buildz-api</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.9.0</version>
     <name>buildz-api</name>
     <description>Keep Track of your Build Artifacts like a Pro.</description>
 
