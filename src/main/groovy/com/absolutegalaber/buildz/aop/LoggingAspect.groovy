@@ -12,7 +12,7 @@ import org.aspectj.lang.annotation.Pointcut
 @Aspect
 class LoggingAspect {
 
-    @Pointcut("within(com.absolutegalaber.buildz.service.* || com.absolutegalaber.buildz.api.v1.*)")
+    @Pointcut("within(com.absolutegalaber.buildz.service.* || com.absolutegalaber.buildz.api.v1.impl.*)")
     void loggingPointcut() {
     }
 
@@ -29,7 +29,7 @@ class LoggingAspect {
             log.info("{}.{}( {} )", joinPoint.getSignature().getDeclaringTypeName(), methodName, Arrays.toString(joinPoint.getArgs()))
         }
         try {
-            Object result = joinPoint.proceed();
+            Object result = joinPoint.proceed()
             if (!isMetaClassCall) {
                 log.info("{}.{}(): {}", joinPoint.getSignature().getDeclaringTypeName(), methodName, result)
             }

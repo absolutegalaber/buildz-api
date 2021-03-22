@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 class ServerEndpointImplTest extends BaseRestSpec {
     def "Get"() {
         given:
-        String serverName = 'Test Server 1'
+        String serverName = 'Test-Server-1'
         String GET_SERVER_URKL = "http://localhost:${port}/api/v1/servers/${serverName}"
 
         when:
@@ -51,7 +51,7 @@ class ServerEndpointImplTest extends BaseRestSpec {
 
     def "Reserve Server"() {
         given:
-        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test Server 1/reservation"
+        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test-Server-1/reservation"
         String by = "Endpoint Test"
         String note = "Testing"
         ReserveServerEvent reservation = new ReserveServerEvent(reservedBy: by, reservationNote: note)
@@ -69,7 +69,7 @@ class ServerEndpointImplTest extends BaseRestSpec {
 
     def "Release Server"() {
         given:
-        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test Server 1/reservation"
+        String RESERVE_SERVER_URL = "http://localhost:${port}/api/v1/servers/Test-Server-1/reservation"
         ReserveServerEvent reservation = new ReserveServerEvent(
                 reservedBy: "Endpoint Test",
                 reservationNote: "Testing"
@@ -82,7 +82,7 @@ class ServerEndpointImplTest extends BaseRestSpec {
         restTemplate.delete(RESERVE_SERVER_URL)
         // .. and finally get server to check for reservation
         ResponseEntity<Server> response =
-                restTemplate.getForEntity("http://localhost:${port}/api/v1/servers/Test Server 1", Server)
+                restTemplate.getForEntity("http://localhost:${port}/api/v1/servers/Test-Server-1", Server)
 
         then:
         response.statusCode == HttpStatus.OK

@@ -28,12 +28,7 @@ class DeployEndpointImpl implements DeployEndpoint {
     }
 
     @Override
-    DeploySearchResult search(
-            String serverName,
-            DeploySearch deploySearch
-    ) throws DataNotFoundException {
-        deploySearch.serverName = serverName
-
+    DeploySearchResult search(DeploySearch deploySearch) throws DataNotFoundException {
         deployService.search(deploySearch)
     }
 

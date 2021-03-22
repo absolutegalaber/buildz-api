@@ -13,10 +13,13 @@ class DeployEndpointImplTest extends BaseRestSpec {
 
     @Unroll("#message")
     def "Search"() {
+        given:
+        String serverName = 'Test-Server-1'
+
         when:
-        DeploySearch ds = new DeploySearch(page: page)
+        DeploySearch ds = new DeploySearch(serverName: serverName, page: page)
         ResponseEntity<DeploySearchResult> responseEntity = restTemplate.postForEntity(
-                "http://localhost:${port}/api/v1/deploys/on/Test Server 1",
+                "http://localhost:${port}/api/v1/deploys/on",
                 ds,
                 DeploySearchResult
         )
@@ -70,9 +73,9 @@ class DeployEndpointImplTest extends BaseRestSpec {
         !response.body.labels.isEmpty()
 
         where:
-        project      | serverName
-        "backend"    | 'MyShinyNewServer'
-        "frontend"   | "Test Server 1"
+        project    | serverName
+        "backend"  | 'MyShinyNewServer'
+        "frontend" | "Test-Server-1"
     }
 
     def "Register With Wrong data"() {
@@ -96,7 +99,7 @@ class DeployEndpointImplTest extends BaseRestSpec {
         when:
         String REGISTER_URL = "http://localhost:${port}/api/v1/deploys/create"
         RegisterDeployEvent firstRegistration = new RegisterDeployEvent(
-                serverName: 'Test Server 1',
+                serverName: 'Test-Server-1',
                 project: 'backend',
                 branch: 'main',
                 buildNumber: 1
@@ -104,7 +107,7 @@ class DeployEndpointImplTest extends BaseRestSpec {
         restTemplate.postForEntity(REGISTER_URL, firstRegistration, IDeploy)
 
         RegisterDeployEvent secondRegistration = new RegisterDeployEvent(
-                serverName: 'Test Server 1',
+                serverName: 'Test-Server-1',
                 project: 'backend',
                 branch: 'next',
                 buildNumber: 1
