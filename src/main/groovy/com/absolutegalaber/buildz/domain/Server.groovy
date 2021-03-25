@@ -6,13 +6,13 @@ import groovy.transform.ToString
 import javax.persistence.Column
 import javax.persistence.Embeddable
 import javax.persistence.Embedded
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Index;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Basic;
+import javax.persistence.Entity
+import javax.persistence.Table
+import javax.persistence.Index
+import javax.persistence.Id
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Basic
 
 /**
  * An Entity which represents a Server that should be tracked by the Buildz
@@ -34,6 +34,12 @@ class Server implements Serializable {
 
     @Basic(optional = false)
     String name
+
+    @Basic(optional = true)
+    String nickName
+
+    @Basic(optional = true)
+    String description
 
     @Embedded
     Reservation reservation

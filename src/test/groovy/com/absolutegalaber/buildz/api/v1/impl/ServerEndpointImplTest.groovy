@@ -90,4 +90,46 @@ class ServerEndpointImplTest extends BaseRestSpec {
         and:
         response.getBody().getReservation() == null
     }
+
+    def "Update Server Info"() {
+        given:
+        String serverName = 'Test-Server-1'
+        String nickName = 'SuperMachine'
+        String description = 'My new super machine'
+        String UPDATE_SERVER_URL = "http://localhost:${port}/api/v1/servers"
+        def theServer = new IServer(
+                name: serverName,
+                nickName: nickName,
+                description: description,
+        )
+
+        when:
+        ResponseEntity<IServer> responseEntity = restTemplate.postForEntity(UPDATE_SERVER_URL, theServer, IServer)
+
+        then:
+        responseEntity.statusCode == HttpStatus.OK
+
+        and:
+        responseEntity.getBody().getNickName() == nickName
+        responseEntity.getBody().getDescription() == description
+    }
+
+    def "Invalid Update Server call"() {
+        given:
+        String nickName = 'SuperMachine'
+        String description = 'My new super machine'
+        String UPDATE_SERVER_URL = "http://localhost:${port}/api/v1/servers"
+        def theServer = new IServer(
+                name: null,
+                nickName: nickName,
+                description: description,
+        )
+
+        when:
+        ResponseEntity<Object> response = restTemplate.postForEntity(UPDATE_SERVER_URL, theServer, IServer)
+
+        then:
+        //Validation should kick in
+        response.statusCode == HttpStatus.BAD_REQUEST
+    }
 }
