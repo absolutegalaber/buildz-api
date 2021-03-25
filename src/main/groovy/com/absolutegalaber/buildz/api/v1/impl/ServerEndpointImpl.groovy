@@ -46,4 +46,11 @@ class ServerEndpointImpl implements ServerEndpoint {
     void releaseServer(String name) {
         serverService.releaseServerByName(name)
     }
+
+    @Override
+    IServer info(IServer server) throws DataNotFoundException {
+        IServer.of(
+                serverService.update(server.name, server.nickName, server.description)
+        )
+    }
 }

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -165,5 +166,44 @@ public interface ServerEndpoint {
     void releaseServer(
             @Parameter(name = "name", description = "Name of the Server to be released.")
             @PathVariable("name") String name
+    ) throws DataNotFoundException;
+
+    /**
+     * @param server IServer containing nickName and/or description.
+     * @return The updated Server.
+     * @throws DataNotFoundException If no server can be found with the specified name.
+     */
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Server Info updated",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/IServer")
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No Server with this name was found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/ExceptionInfo")
+                    )
+            )
+    })
+    @Operation(
+            summary = "Update a Server's nickName and description.",
+            description = "Reserves a specific Server by name,",
+            tags = "servers"
+    )
+    @PostMapping("/api/v1/servers")
+    IServer info(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/IServer")
+                    )
+            )
+            @Valid @RequestBody IServer server
     ) throws DataNotFoundException;
 }

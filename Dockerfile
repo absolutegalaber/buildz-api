@@ -1,5 +1,5 @@
 FROM azul/zulu-openjdk-alpine:11.0.7
-ADD target/buildz-api-0.8.2.jar /opt/buildz-api.jar
+ADD target/buildz-api-0.9.0.jar /opt/buildz-api.jar
 
 ENV DB_URL="jdbc:mysql://buildz_db:3306/buildz"
 ENV DB_USR="buildz"

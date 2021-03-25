@@ -6,6 +6,7 @@ import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.ReserveServerEvent
 import com.absolutegalaber.buildz.repository.ServerRepository
 import org.springframework.data.domain.Sort
+import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,8 +27,8 @@ class ServerService {
     /**
      * Finds a Server in the database via its name.
      *
-     * @param   name the name of the Server which should be fetched from the DB
-     * @return  A Server with the provided name
+     * @param name the name of the Server which should be fetched from the DB
+     * @return A Server with the provided name
      */
     Optional<Server> byName(String name) {
         serverRepository.findOne(serverWithName(name))
@@ -38,8 +39,8 @@ class ServerService {
      *
      * If it does, return it. If it does not, the Server is saved and that newly create Server is returned.
      *
-     * @param serverName                the name of the Server which should be created or returned
-     * @return                          the Server with the provided name or a newly created Server with the provided
+     * @param serverName the name of the Server which should be created or returned
+     * @return the Server with the provided name or a newly created Server with the provided
      *                                  name
      * @throws InvalidRequestException  when the serverName is invalid
      */
@@ -50,7 +51,7 @@ class ServerService {
 
         Server server = serverRepository.findOne(serverWithName(serverName)).orElse(
                 new Server(
-                       name: serverName
+                        name: serverName
                 )
         )
 
@@ -64,10 +65,10 @@ class ServerService {
     /**
      * Fetch all the name of every Server saved in the Buildz system.
      *
-     * @return  a list of all server
+     * @return a list of all server
      */
     List<Server> allServers() {
-        serverRepository.findAll(Sort.by('name')).collect({it})
+        serverRepository.findAll(Sort.by('name')).collect({ it })
     }
 
     Server.Reservation reserveServerByName(
@@ -80,8 +81,8 @@ class ServerService {
 
         Server server = serverRepository.findOne(serverWithName(serverName))
                 .orElseThrow(
-                        {-> new DataNotFoundException("Server with name ${serverName} has not been registered")
-                })
+                        { -> new DataNotFoundException("Server with name ${serverName} has not been registered")
+                        })
 
         if (!event.getReservedBy() || !event.getReservedBy().trim()) {
             throw new InvalidRequestException("Reservation event does not include who is reserving the server")
@@ -110,5 +111,15 @@ class ServerService {
         server.setReservation(null)
 
         serverRepository.save(server)
+    }
+
+    Server update(@NonNull String name, String nickName, String description) throws DataNotFoundException {
+        Server theServer = serverRepository.findOne(serverWithName(name)).orElseThrow(
+                { -> new DataNotFoundException("No Server found for name=" + name) }
+        )
+        theServer.nickName = nickName
+        theServer.description = description
+        return serverRepository.save(theServer)
+
     }
 }

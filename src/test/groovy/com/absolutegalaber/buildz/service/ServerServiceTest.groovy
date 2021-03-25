@@ -68,7 +68,7 @@ class ServerServiceTest extends BaseBuildzSpec {
         ' '  | 'Could not TrackServer with empty name'
     }
 
-    @Unroll('#message')
+    @Unroll("#message")
     def 'Valid Server reservation tests'() {
         when:
         def serverName = 'Test-Server-1'
@@ -86,7 +86,7 @@ class ServerServiceTest extends BaseBuildzSpec {
         'Person' | 'note' | 'Was able to reserve the Server by "Person" (with a note)'
     }
 
-    @Unroll('#message')
+    @Unroll("#message")
     def 'Invalid Server reservation tests'() {
         when:
         // The reservation note should not affect the reservation logic, so ignore it for these tests
@@ -117,7 +117,7 @@ class ServerServiceTest extends BaseBuildzSpec {
     // NOTE: No need to test the ServerService#reserveServer method since it is already tested by the
     // ServerService#reserveServerByName tests
 
-    @Unroll('#message')
+    @Unroll("#message")
     def 'Valid ReleaseServer tests'() {
         given:
         def serverName = 'Test-Server-1'
@@ -145,7 +145,7 @@ class ServerServiceTest extends BaseBuildzSpec {
         false           | 'Was able to release a Server with no reservation'
     }
 
-    @Unroll('#message')
+    @Unroll("#message")
     def 'Invalid ReleaseServer tests'() {
 
         when:
@@ -160,5 +160,40 @@ class ServerServiceTest extends BaseBuildzSpec {
         ''            | InvalidRequestException | 'Was unable to release Server because serverName was not set'
         ' '           | InvalidRequestException | 'Was unable to release Server because serverName was empty'
         'Fake-Server' | DataNotFoundException   | 'Was unable to release Server because a Server with the provided Server name does not exist'
+    }
+
+
+    @Unroll("#message")
+    def "Valid Server info"() {
+
+        when:
+        Server updated = service.update(serverName, nickName, description)
+
+        then:
+        updated.name == serverName
+        and:
+        updated.nickName == nickName
+        and:
+        updated.description == description
+
+        where:
+        serverName      | nickName      | description
+        'Test-Server-1' | 'My Precious' | 'My Cool Test Server #1'
+        'Test-Server-1' | null          | null
+    }
+
+    @Unroll("Update() throws #exceptionClass for serverName=#serverName")
+    def "Invalid Server Info"() {
+
+        when:
+        service.update(serverName, nickName, description)
+
+        then:
+        thrown(exceptionClass)
+
+        where:
+        serverName     | nickName      | description | exceptionClass
+        'NoSuchServer' | 'My Precious' | 'My Cool Test Server #1' | DataNotFoundException
+        null           | 'My Precious' | 'My Cool Test Server #1' | NullPointerException
     }
 }
