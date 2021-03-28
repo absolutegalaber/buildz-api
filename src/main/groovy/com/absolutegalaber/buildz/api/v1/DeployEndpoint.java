@@ -5,6 +5,7 @@ import com.absolutegalaber.buildz.domain.BuildSearch;
 import com.absolutegalaber.buildz.domain.DeploySearch;
 import com.absolutegalaber.buildz.domain.DeploySearchResult;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
+import com.absolutegalaber.buildz.domain.exception.FutureDateException;
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
 import com.absolutegalaber.buildz.events.RegisterDeployEvent;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -178,4 +180,11 @@ public interface DeployEndpoint {
             @PathVariable(name = "deployId") Long deployId,
             @RequestBody Map<String, String> deployLabels
     ) throws InvalidRequestException;
+
+    @PostMapping("/api/v1/deploy/on/{serverName}/at")
+    IDeploy onServerAt(
+            @Parameter(name = "serverName", description = "The name of the server on which the deploy should be on")
+            @PathVariable(name = "serverName") String serverName,
+            @RequestBody Date deployedAt
+    ) throws DataNotFoundException, InvalidRequestException, FutureDateException;
 }

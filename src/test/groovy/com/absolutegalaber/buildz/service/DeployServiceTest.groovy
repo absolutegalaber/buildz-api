@@ -1,6 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.BaseBuildzSpec
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.Server
@@ -8,6 +9,8 @@ import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import spock.lang.Subject
 import spock.lang.Unroll
 
@@ -206,5 +209,19 @@ class DeployServiceTest extends BaseBuildzSpec {
         null     | ' '    | false    | 'Failed to create Reservation because the "by" variable is null (with empty note)'
         ''       | ' '    | false    | 'Failed to create Reservation because the "by" variable is not set (with an empty note)'
         ' '      | ' '    | false    | 'Failed to create Reservation because the "by" variable is empty (with an empty note)'
+    }
+
+    @Unroll('#message')
+    def 'Invalid onServerAt Calls'() {
+        when:
+        deployService.onServerAt(serverName, givenDate)
+
+        then:
+        thrown(expectedException)
+
+        where:
+        givenDate  | serverName      | expectedException       | message
+        new Date() | null            | InvalidRequestException | 'onServerAt fails due to missing server name'
+        null       | 'Test-Server-1' | InvalidRequestException | 'onServerAt fails due to missing given Date'
     }
 }

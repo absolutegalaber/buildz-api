@@ -1,6 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
@@ -8,14 +9,18 @@ import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
+import com.absolutegalaber.buildz.domain.Deploy_
 import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
+import com.absolutegalaber.buildz.domain.exception.FutureDateException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import com.absolutegalaber.buildz.events.ReserveServerEvent
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.DeployRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -57,6 +62,34 @@ class DeployService {
         DeploySearchResult.fromPageResult(
                 deployRepository.findAll(deploysOnServer(search.serverName), search.page())
         )
+    }
+
+    Deploy onServerAt(String serverName, Date deployedAt)
+            throws DataNotFoundException, InvalidRequestException, FutureDateException
+    {
+        if (serverName == null || serverName.trim() == "") {
+            throw new InvalidRequestException("Could not find a Deploy - No Server Name provided")
+        }
+
+        if (deployedAt == null) {
+            throw new InvalidRequestException("Could not find Deploy on ${serverName} - No Date provided")
+        }
+
+        if (deployedAt.after(new Date())) {
+            throw new FutureDateException("Could not return Deploy on ${serverName} - Provided Date is in the future")
+        }
+
+        Page<Deploy> deploys = deployRepository.findAll(
+                deployOnServerAt(serverName, deployedAt),
+                PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, Deploy_.DEPLOYED_AT))
+        )
+
+        if (deploys == null || deploys.getContent() == null || deploys.getContent().size() <= 0) {
+            throw new DataNotFoundException("No Server or Deploy found on " + serverName + " at " + deployedAt)
+        }
+
+        // If the list exists and has more than 0 records, there should only be one result thanks to the page
+        deploys.getContent().get(0)
     }
 
     /**
