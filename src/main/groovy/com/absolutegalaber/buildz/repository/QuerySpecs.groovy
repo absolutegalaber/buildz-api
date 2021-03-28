@@ -1,5 +1,6 @@
 package com.absolutegalaber.buildz.repository
 
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.domain.*
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.lang.NonNull
@@ -191,6 +192,20 @@ class QuerySpecs {
             Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 Join<Deploy, Server> serverJoin = root.join(Deploy_.server)
                 criteriaBuilder.equal(serverJoin.get(Server_.name), serverName)
+            }
+        }
+    }
+
+    static Specification<Deploy> deployOnServerAt(String serverName, Date deployedAt) {
+        new Specification<Deploy>() {
+            @Override
+            Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Join<Deploy, Server> serverJoin = root.join(Deploy_.server)
+
+                criteriaBuilder.and(
+                    criteriaBuilder.equal(serverJoin.get(Server_.name), serverName),
+                    criteriaBuilder.lessThanOrEqualTo(root.get(Deploy_.deployedAt), deployedAt)
+                )
             }
         }
     }
