@@ -182,7 +182,7 @@ public interface DeployEndpoint {
     ) throws InvalidRequestException;
 
     @PostMapping("/api/v1/deploy/on/{serverName}/at")
-    IDeploy onServerAt(
+    DeploySearchResult onServerAt(
             @Parameter(name = "serverName", description = "The name of the server on which the deploy should be on")
             @PathVariable(name = "serverName") String serverName,
             @RequestBody Date deployedAt

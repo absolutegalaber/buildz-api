@@ -2,7 +2,6 @@ package com.absolutegalaber.buildz.api.v1.impl
 
 import com.absolutegalaber.buildz.api.BaseRestSpec
 import com.absolutegalaber.buildz.api.model.IDeploy
-
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
@@ -62,13 +61,14 @@ class DeployEndpointImplTest extends BaseRestSpec {
                 })
                 .get().id
 
-        ResponseEntity<IDeploy> atResponse = restTemplate.postForEntity(
+        ResponseEntity<DeploySearchResult> atResponse = restTemplate.postForEntity(
                 "http://localhost:${port}/api/v1/deploy/on/Test-Server-1/at",
                 givenDate,
-                IDeploy
+                DeploySearchResult
         )
 
-        long idFromAt = atResponse.getBody().id
+        // There should only be one result
+        long idFromAt = atResponse.getBody().getDeploys().get(0).id
 
         then:
         idFromAt == idFromSearch

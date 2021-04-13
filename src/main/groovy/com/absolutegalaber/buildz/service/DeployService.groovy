@@ -64,7 +64,7 @@ class DeployService {
         )
     }
 
-    Deploy onServerAt(String serverName, Date deployedAt)
+    DeploySearchResult onServerAt(String serverName, Date deployedAt)
             throws DataNotFoundException, InvalidRequestException, FutureDateException
     {
         if (serverName == null || serverName.trim() == "") {
@@ -85,11 +85,10 @@ class DeployService {
         )
 
         if (deploys == null || deploys.getContent() == null || deploys.getContent().size() <= 0) {
-            throw new DataNotFoundException("No Server or Deploy found on " + serverName + " at " + deployedAt)
+            throw new DataNotFoundException("No Deploy found on " + serverName + " at " + deployedAt)
         }
 
-        // If the list exists and has more than 0 records, there should only be one result thanks to the page
-        deploys.getContent().get(0)
+        DeploySearchResult.fromPageResult(deploys)
     }
 
     /**
