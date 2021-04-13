@@ -64,6 +64,21 @@ class DeployService {
         )
     }
 
+    /**
+     * Validate the parameters and then attempt to find the Deploy that
+     * was/is deployed on a Server at a specific Datetime.
+     *
+     * @param serverName the name of the server on which the Deploy was/is
+     * @param deployedAt the Datetime which will be used to find the Deploy
+     * on the server at the Datetime
+     * @return A search result that includes a single Deploy
+     * @throws DataNotFoundException the server was not found, or there was
+     * no Deploy on the server at the provided Datetime
+     * @throws InvalidRequestException the serverName or deployedAt Datetime
+     * is missing or invalid
+     * @throws FutureDateException the provided deployedAt Datetime is in the
+     * future
+     */
     DeploySearchResult onServerAt(String serverName, Date deployedAt)
             throws DataNotFoundException, InvalidRequestException, FutureDateException
     {

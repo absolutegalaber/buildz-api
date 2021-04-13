@@ -1,6 +1,5 @@
 package com.absolutegalaber.buildz.repository
 
-import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.domain.*
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.lang.NonNull
@@ -196,6 +195,13 @@ class QuerySpecs {
         }
     }
 
+    /**
+     * Find a single Deploy deployed on a specific serverName at a specific Datetime
+     *
+     * @param serverName the name of the server on which the Deploy was/is deployed
+     * @param deployedAt the Datetime at which the Deploy was/is deployed
+     * @return Specification about a single specific deploy
+     */
     static Specification<Deploy> deployOnServerAt(String serverName, Date deployedAt) {
         new Specification<Deploy>() {
             @Override
