@@ -36,6 +36,7 @@ class Server implements Serializable {
     String name
 
     @Basic(optional = true)
+    @Column(name = "nick_name")
     String nickName
 
     @Basic(optional = true)
