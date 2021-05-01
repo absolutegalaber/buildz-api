@@ -61,7 +61,7 @@ class EnvironmentEndpointImpl implements EnvironmentEndpoint {
     EnvironmentBuilds verifyEnvironment(Set<IArtifact> artifacts) {
         EnvironmentBuilds toReturn = new EnvironmentBuilds(environment: 'verification-result')
         artifacts.forEach({ artifact ->
-            Optional<Build> build = buildService.latestArtifact(artifact.toDomainArtifact())
+            Optional<Build> build = buildService.withBuildNumberOrLatestArtifact(artifact.toDomainArtifact())
             build.ifPresent(toReturn.&add)
         })
         toReturn

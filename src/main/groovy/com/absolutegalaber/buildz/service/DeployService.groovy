@@ -1,6 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.api.model.IArtifact
+import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.api.model.IEnvironment
 import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
@@ -8,14 +9,18 @@ import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
 import com.absolutegalaber.buildz.domain.DeploySearch
 import com.absolutegalaber.buildz.domain.DeploySearchResult
+import com.absolutegalaber.buildz.domain.Deploy_
 import com.absolutegalaber.buildz.domain.Environment
 import com.absolutegalaber.buildz.domain.Server
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException
+import com.absolutegalaber.buildz.domain.exception.FutureDateException
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException
 import com.absolutegalaber.buildz.events.RegisterDeployEvent
 import com.absolutegalaber.buildz.events.ReserveServerEvent
 import com.absolutegalaber.buildz.repository.BuildRepository
 import com.absolutegalaber.buildz.repository.DeployRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -60,21 +65,45 @@ class DeployService {
     }
 
     /**
-     * Find a list of Deploys via a Server name.
+     * Validate the parameters and then attempt to find the Deploy that
+     * was/is deployed on a Server at a specific Datetime.
      *
-     * @param serverName the name of a server
-     * @return a list of views which represent Deploys on a Server
-     * @throws InvalidRequestException  when the provided Server name is not associated to a Server
+     * @param serverName the name of the server on which the Deploy was/is
+     * @param deployedAt the Datetime which will be used to find the Deploy
+     * on the server at the Datetime
+     * @return A search result that includes a single Deploy
+     * @throws DataNotFoundException the server was not found, or there was
+     * no Deploy on the server at the provided Datetime
+     * @throws InvalidRequestException the serverName or deployedAt Datetime
+     * is missing or invalid
+     * @throws FutureDateException the provided deployedAt Datetime is in the
+     * future
      */
-    List<Deploy> byServer(String serverName) throws InvalidRequestException {
-        Server server = serverService.byName(serverName)
-                .orElseThrow({ ->
-                    new InvalidRequestException("No server found with name=${serverName}")
-                })
-        deployRepository.findAll(
-                deploysOnServer(server.name),
-                Sort.by('id').descending()
+    DeploySearchResult onServerAt(String serverName, Date deployedAt)
+            throws DataNotFoundException, InvalidRequestException, FutureDateException
+    {
+        if (serverName == null || serverName.trim() == "") {
+            throw new InvalidRequestException("Could not find a Deploy - No Server Name provided")
+        }
+
+        if (deployedAt == null) {
+            throw new InvalidRequestException("Could not find Deploy on ${serverName} - No Date provided")
+        }
+
+        if (deployedAt.after(new Date())) {
+            throw new FutureDateException("Could not return Deploy on ${serverName} - Provided Date is in the future")
+        }
+
+        Page<Deploy> deploys = deployRepository.findAll(
+                deployOnServerAt(serverName, deployedAt),
+                PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, Deploy_.DEPLOYED_AT))
         )
+
+        if (deploys == null || deploys.getContent() == null || deploys.getContent().size() <= 0) {
+            throw new DataNotFoundException("No Deploy found on " + serverName + " at " + deployedAt)
+        }
+
+        DeploySearchResult.fromPageResult(deploys)
     }
 
     /**

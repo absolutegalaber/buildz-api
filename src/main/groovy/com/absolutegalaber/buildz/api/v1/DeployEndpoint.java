@@ -5,6 +5,7 @@ import com.absolutegalaber.buildz.domain.BuildSearch;
 import com.absolutegalaber.buildz.domain.DeploySearch;
 import com.absolutegalaber.buildz.domain.DeploySearchResult;
 import com.absolutegalaber.buildz.domain.exception.DataNotFoundException;
+import com.absolutegalaber.buildz.domain.exception.FutureDateException;
 import com.absolutegalaber.buildz.domain.exception.InvalidRequestException;
 import com.absolutegalaber.buildz.events.RegisterDeployEvent;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -178,4 +180,59 @@ public interface DeployEndpoint {
             @PathVariable(name = "deployId") Long deployId,
             @RequestBody Map<String, String> deployLabels
     ) throws InvalidRequestException;
+
+    /**
+     * Finds the Deploy that would have been on the specific server at a specific Datetime.
+     *
+     * This is done by first finding all Deploys whose deployed_at Date is older than the provided
+     * Date time and the Deploy with the youngest deployed_at Date is assumed to be the Deploy
+     * that was on the Server during the provided Datetime request parameter.
+     *
+     * If the provided Date Request Parameter is in the future, or no Deploy had yet been deployed
+     * on the server at the provided Datetime, an exception is thrown.
+     *
+     * @param serverName the server on which the deploy would have been deployed
+     * @param deployedAt the Datetime at which the Deploy would have been on the Server
+     * @return A search result that contains a single Deploy
+     * @throws DataNotFoundException No Deploy was on the Server during the provided Datetime
+     * @throws InvalidRequestException The request had missing or invalid data (e.g. serverName or Date)
+     * @throws FutureDateException The provided Datetime is in the future
+     */
+    @Operation(
+            summary = "Deploy on Server at deployedAt Date",
+            description = "Find the Deploy on a Server at a specific date and time.",
+            tags = {"deploys"}
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Deploy Search Results returned",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/DeploySearchResult")
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The Request included invalid parameters (invalid server name, date, etc.)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/ExceptionInfo")
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "No such Deploy.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(ref = "#/components/schemas/ExceptionInfo")
+                    )
+            )
+    })
+    @PostMapping("/api/v1/deploy/on/{serverName}/at")
+    DeploySearchResult onServerAt(
+            @Parameter(name = "serverName", description = "The name of the server on which the deploy should be on")
+            @PathVariable(name = "serverName") String serverName,
+            @RequestBody Date deployedAt
+    ) throws DataNotFoundException, InvalidRequestException, FutureDateException;
 }

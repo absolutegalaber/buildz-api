@@ -196,6 +196,27 @@ class QuerySpecs {
     }
 
     /**
+     * Find a single Deploy deployed on a specific serverName at a specific Datetime
+     *
+     * @param serverName the name of the server on which the Deploy was/is deployed
+     * @param deployedAt the Datetime at which the Deploy was/is deployed
+     * @return Specification about a single specific deploy
+     */
+    static Specification<Deploy> deployOnServerAt(String serverName, Date deployedAt) {
+        new Specification<Deploy>() {
+            @Override
+            Predicate toPredicate(Root<Deploy> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Join<Deploy, Server> serverJoin = root.join(Deploy_.server)
+
+                criteriaBuilder.and(
+                    criteriaBuilder.equal(serverJoin.get(Server_.name), serverName),
+                    criteriaBuilder.lessThanOrEqualTo(root.get(Deploy_.deployedAt), deployedAt)
+                )
+            }
+        }
+    }
+
+    /**
      * Generates a way to search the database for a specific Deploy based on
      * the id of said Deploy
      * @param id    the ID of the Deploy

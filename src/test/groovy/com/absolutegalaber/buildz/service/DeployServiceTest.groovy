@@ -21,33 +21,6 @@ class DeployServiceTest extends BaseBuildzSpec {
     ServerService serverService
 
     @Unroll('#message')
-    def 'Successful byServer calls'() {
-        when:
-        List<Deploy> deploys = deployService.byServer(serverName)
-
-        then:
-        deploys.size() == size
-
-        where:
-        serverName      | size | message
-        'Empty-Server'  | 0    | 'Fetching all deploys from server with no deploys'
-        'Test-Server-1' | 11   | 'Fetching all deploys from server with deploys'
-    }
-
-    @Unroll('#message')
-    def 'Failing byServer calls'() {
-        when:
-        deployService.byServer(serverName)
-
-        then:
-        thrown(exception)
-
-        where:
-        serverName     | exception               | message
-        'Not A Server' | InvalidRequestException | 'Fetching all deploys from a non-existent server'
-    }
-
-    @Unroll('#message')
     def 'ById'() {
         when:
         boolean found
@@ -233,5 +206,19 @@ class DeployServiceTest extends BaseBuildzSpec {
         null     | ' '    | false    | 'Failed to create Reservation because the "by" variable is null (with empty note)'
         ''       | ' '    | false    | 'Failed to create Reservation because the "by" variable is not set (with an empty note)'
         ' '      | ' '    | false    | 'Failed to create Reservation because the "by" variable is empty (with an empty note)'
+    }
+
+    @Unroll('#message')
+    def 'Invalid onServerAt Calls'() {
+        when:
+        deployService.onServerAt(serverName, givenDate)
+
+        then:
+        thrown(expectedException)
+
+        where:
+        givenDate  | serverName      | expectedException       | message
+        new Date() | null            | InvalidRequestException | 'onServerAt fails due to missing server name'
+        null       | 'Test-Server-1' | InvalidRequestException | 'onServerAt fails due to missing given Date'
     }
 }
