@@ -1,0 +1,37 @@
+name: Publish to GitHub Packages
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release Version
+        required: true
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Set up a db for the tests
+      - name: Set up Maria DB
+        uses: getong/mariadb-action@v1.1
+        with:
+          mysql database: 'buildz'
+          mysql user: 'buildz'
+          mysql password: 'buildz'
+          character set server: 'utf8'
+          collation server: 'utf8_general_ci'
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Package
+        run: mvn clean package
+      - name: Dockerize
+        run: docker run --name check .
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
