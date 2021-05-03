@@ -1,6 +1,7 @@
 # buildz-api
 
-[![Build Status](https://travis-ci.com/absolutegalaber/buildz-api.svg?branch=main)](https://travis-ci.com/absolutegalaber/buildz-api)
+[![Java CI with Maven](https://github.com/absolutegalaber/buildz-api/actions/workflows/build.yml/badge.svg)](https://github.com/absolutegalaber/buildz-api/actions/workflows/build.yml)
+
 [![codecov](https://codecov.io/gh/absolutegalaber/buildz-api/branch/main/graph/badge.svg?token=FWDNVM1EPA)](https://codecov.io/gh/absolutegalaber/buildz-api)
 
 ## Build
