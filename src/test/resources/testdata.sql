@@ -1,30 +1,30 @@
 # noinspection SqlWithoutWhereForFile
 
 delete
-from deploy_label;
+from test_buildz.deploy_label;
 delete
-from deploy;
+from test_buildz.deploy;
 delete
-from server;
+from test_buildz.server;
 delete
-from artifact_labels;
+from test_buildz.artifact_labels;
 delete
-from artifact;
+from test_buildz.artifact;
 delete
-from environment;
+from test_buildz.environment;
 delete
-from build_count;
+from test_buildz.build_count;
 delete
-from build_label;
+from test_buildz.build_label;
 delete
-from build;
+from test_buildz.build;
 delete
-from branch;
+from test_buildz.branch;
 delete
-from project;
+from test_buildz.project;
 
 -- a build count
-INSERT INTO build_count (id, branch, counter, project)
+INSERT INTO test_buildz.build_count (id, branch, counter, project)
 VALUES (1, 'main', 10, 'backend'),
        (2, 'next', 10, 'backend'),
        (3, 'feature/feature-backend', 10, 'backend'),
@@ -35,7 +35,7 @@ VALUES (1, 'main', 10, 'backend'),
        (8, 'next', 10, 'backoffice'),
        (9, 'feature/feature-backoffice', 10, 'backoffice');
 
-INSERT INTO `build` (`id`, `branch`, `build_number`, `project`)
+INSERT INTO test_buildz.`build` (`id`, `branch`, `build_number`, `project`)
 VALUES (21, 'feature-backend', 1, 'backend'),
        (22, 'feature-backend', 2, 'backend'),
        (23, 'feature-backend', 3, 'backend'),
@@ -127,7 +127,7 @@ VALUES (21, 'feature-backend', 1, 'backend'),
        (49, 'next', 9, 'frontend'),
        (50, 'next', 10, 'frontend');
 
-INSERT INTO `build_label` (`id`, `label_key`, `label_value`, `build_id`)
+INSERT INTO test_buildz.`build_label` (`id`, `label_key`, `label_value`, `build_id`)
 VALUES (1, 'integration-test', 'ok', 1),
        (2, 'jenkins-build', 'http://my-jenkins/5b13db47-0fd7-4d86-b305-b44267b2502d', 1),
        (3, 'revision', '8760f3516abcfa33f62a7e2c26c077d87725b27e9958de75478fbfe8078d8a8e', 1),
@@ -400,27 +400,27 @@ VALUES (1, 'integration-test', 'ok', 1),
        (270, 'integration-test', 'broken', 90);
 
 -- environments
-INSERT INTO environment (id, name)
+INSERT INTO test_buildz.environment (id, name)
 VALUES (1, 'main');
-INSERT INTO artifact (id, branch, project, environment_id, build_number)
+INSERT INTO test_buildz.artifact (id, branch, project, environment_id, build_number)
 VALUES (1, 'main', 'backend', 1, '9');
-INSERT INTO artifact (id, branch, project, environment_id)
+INSERT INTO test_buildz.artifact (id, branch, project, environment_id)
 VALUES (2, 'main', 'frontend', 1);
 
 
-INSERT INTO environment (id, name)
+INSERT INTO test_buildz.environment (id, name)
 VALUES (2, 'feature-test-stage-1');
 
-INSERT INTO environment (id, name, internal)
+INSERT INTO test_buildz.environment (id, name, internal)
 VALUES (3, 'Environment of StageServer', true);
 
-INSERT INTO project(id, active)
+INSERT INTO test_buildz.project(id, active)
 VALUES ('backend', 1),
        ('backoffice', 1),
        ('frontend', 1),
        ('abandoned', 0);
 
-INSERT INTO branch(name, project_id, active)
+INSERT INTO test_buildz.branch(name, project_id, active)
 VALUES ('main', 'backend', 1),
        ('next', 'backend', 1),
        ('feature-backend', 'backend', 1),
@@ -436,11 +436,11 @@ VALUES ('main', 'backend', 1),
        ('main', 'abandoned', 1),
        ('merged', 'abandoned', 0);
 
-INSERT INTO server(id, name, reserved_by, reservation_note)
+INSERT INTO test_buildz.server(id, name, reserved_by, reservation_note)
 VALUES (1, 'Test-Server-1', null, null),
        (2, 'Empty-Server', 'Test Account', 'Checking if reservation works');
 
-INSERT INTO deploy(id, deployed_at, build_id, server_id)
+INSERT INTO test_buildz.deploy(id, deployed_at, build_id, server_id)
 VALUES (1, (NOW() - INTERVAL 5 YEAR), 1, 1),
        (2, (NOW() - INTERVAL 1 YEAR), 2, 1),
        (3, (NOW() - INTERVAL 6 MONTH), 2, 1),

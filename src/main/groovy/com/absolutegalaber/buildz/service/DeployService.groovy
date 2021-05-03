@@ -1,9 +1,7 @@
 package com.absolutegalaber.buildz.service
 
 import com.absolutegalaber.buildz.api.model.IArtifact
-import com.absolutegalaber.buildz.api.model.IDeploy
 import com.absolutegalaber.buildz.api.model.IEnvironment
-import com.absolutegalaber.buildz.domain.Artifact
 import com.absolutegalaber.buildz.domain.Build
 import com.absolutegalaber.buildz.domain.Deploy
 import com.absolutegalaber.buildz.domain.DeployLabel
