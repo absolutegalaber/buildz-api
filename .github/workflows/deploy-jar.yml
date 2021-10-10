@@ -1,4 +1,4 @@
-name: Publish to GitHub Packages
+name: Publish Jar to GitHub Packages
 on:
   [ workflow_dispatch ]
 jobs:
